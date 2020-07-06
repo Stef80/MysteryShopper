@@ -2,7 +2,6 @@ package com.example.misteryshopper.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.misteryshopper.R;
@@ -27,9 +25,6 @@ import com.example.misteryshopper.models.HiringModel;
 import com.example.misteryshopper.models.StoreModel;
 import com.example.misteryshopper.utils.notification.MessageCreationService;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class DialogUIHelper {
@@ -108,7 +103,7 @@ public class DialogUIHelper {
                 Log.i("USERINDIALOG", user.toString());
                 model.setIdEmployer(user.getId());
              if(!(TextUtils.isEmpty(id) && TextUtils.isEmpty(managerStr) && TextUtils.isEmpty(cityStr) && TextUtils.isEmpty(adr))) {
-                 mDBHelper.addStoreOfScificId(model, new DBHelper.DataStatus() {
+                 mDBHelper.addStoreOfSpecificId(model, new DBHelper.DataStatus() {
                      @Override
                      public void dataIsLoaded(List<?> obj, List<String> keys) {
                          if (obj != null) {
@@ -162,18 +157,19 @@ public class DialogUIHelper {
                    fee.setError(context.getString(R.string.field_required));
                }else {
                    Double feeNumber = Double.valueOf(feeStr);
-                   String now = DateUtils.formatDateTime(context, System.currentTimeMillis(), DateUtils.FORMAT_SHOW_DATE);
-                   HiringModel hiringModel = new HiringModel(now.trim() + idEmployer, model.getEmployerName(),
+                   String now =  String.valueOf(System.currentTimeMillis());
+                   HiringModel hiringModel = new HiringModel(now + idEmployer, model.getEmployerName(),
                            idEmployer, mailShopper, model.getIdStore(), dateStr, feeNumber);
 
                    mDBHelper.addHiringModel(hiringModel, new DBHelper.DataStatus() {
                        @Override
                        public void dataIsLoaded(List<?> obj, List<String> keys) {
-                           mDBHelper.getTokenbyMail(mailShopper, (obj1, keys1) -> {
+                           mDBHelper.getTokenByMail(mailShopper, (obj1, keys1) -> {
                                Log.i("DILAOGTOKEN", (String) obj1.get(0));
                                MessageCreationService.buildMessage(context, (String) obj1.get(0),
                                        context.getString(R.string.notification_of_employment), model.getCity() + "\n" + model.getAddress()
-                                       , dateStr, String.valueOf(feeNumber), model.getEmployerName(),idEmployer);
+                                       , dateStr, String.valueOf(feeNumber), model.getEmployerName(),
+                                       idEmployer,hiringModel.getId(),model.getIdStore());
                            });
                            dialog.dismiss();
                        }

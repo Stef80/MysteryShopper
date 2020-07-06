@@ -27,20 +27,22 @@ public class MessageCreationService {
 
 
     public static void buildMessage(Context context,String token, String notificationTitle,String message,String response){
-          buildMessage(context, token, notificationTitle, message,null, response,null,null);
+          buildMessage(context, token, notificationTitle, message,null, response,null,null,null,null);
     }
 
-    public static void buildMessage(Context context,String token, String notificationTitle, String place , String when, String fee, String eName,String empId) {
+    public static void buildMessage(Context context,String token, String notificationTitle, String place , String when, String fee, String eName,String empId,String idHiring,String storeId) {
         JSONObject notification = new JSONObject();
         JSONObject body = new JSONObject();
         try {
-            notification.put("to","topics"+token);
+            notification.put("to","topics/"+token);
             body.put("title", notificationTitle);
             if(when == null){
                 body.put("sName", place);
                 body.put("outcome",fee);
             }else {
                 body.put("place", place);
+                body.put("hId",idHiring);
+                body.put("storeId",storeId);
                 body.put("id",empId);
                 body.put("when", when);
                 body.put("fee", fee);

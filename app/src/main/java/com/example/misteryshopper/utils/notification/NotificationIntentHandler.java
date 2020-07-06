@@ -37,16 +37,23 @@ public class NotificationIntentHandler extends IntentService {
             @Override
             public void dataIsLoaded(List<?> obj, List<String> keys) {
                 String token = (String) obj.get(0);
-
+                String hId = extras.getString("hId");
+                String storeId = extras.getString("storeId");
                 switch (intent.getAction()) {
                     case "accept":
                         Handler acceptHandler = new Handler(Looper.getMainLooper());
                         acceptHandler.post(new Runnable() {
                             @Override
                             public void run() {
+                                mDBHelper.setOutcome(hId, storeId, true, new DBHelper.DataStatus() {
+                                    @Override
+                                    public void dataIsLoaded(List<?> obj, List<String> keys) {
+                                        MessageCreationService.buildMessage(getApplicationContext(),
+                                                token, getApplicationContext().getString(R.string.response_notification), name + " " + surname, "accepted");
+                                       NotificationHandler.cancelNotification();
+                                    }
+                                });
 
-                                MessageCreationService.buildMessage(getApplicationContext(),
-                                        token, getApplicationContext().getString(R.string.response_notification), name + " " + surname, "accepted");
                             }
                         });
                         break;
@@ -55,8 +62,14 @@ public class NotificationIntentHandler extends IntentService {
                         declineHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                MessageCreationService.buildMessage(getApplicationContext(),
-                                        token,getApplicationContext().getString(R.string.response_notification), name + " " + surname, "declined");
+                                mDBHelper.setOutcome(hId, storeId, false, new DBHelper.DataStatus() {
+                                    @Override
+                                    public void dataIsLoaded(List<?> obj, List<String> keys) {
+                                        MessageCreationService.buildMessage(getApplicationContext(),
+                                                token,getApplicationContext().getString(R.string.response_notification), name + " " + surname, "declined");
+                                        NotificationHandler.cancelNotification();
+                                    }
+                                });
                             }
                         });
                         break;
@@ -65,6 +78,7 @@ public class NotificationIntentHandler extends IntentService {
                         showHandler.post(new Runnable() {
                             @Override
                             public void run() {
+                                NotificationHandler.cancelNotification();
                                 Intent go = new Intent(getApplicationContext(), MainActivity.class);
                                 go.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(go);

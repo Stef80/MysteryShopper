@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.datbase.DBHelper;
-import com.example.misteryshopper.exception.InvalidParamsException;
+
 import com.example.misteryshopper.models.EmployerModel;
 import com.example.misteryshopper.models.HiringModel;
 import com.example.misteryshopper.models.ShopperModel;
@@ -56,7 +56,7 @@ public class FirebaseDBHelper implements DBHelper {
     private FirebaseAuth mAuth;
     private FirebaseInstanceId mFirebaseId;
     public static DBHelper mDbHelper;
-    List<ShopperModel> shoppers = new ArrayList<>();
+
 
 
     private FirebaseDBHelper() {
@@ -111,7 +111,7 @@ public class FirebaseDBHelper implements DBHelper {
 
 
     @Override
-    public void login(String userMail, String password, final Context context, DataStatus status) throws InvalidParamsException {
+    public void login(String userMail, String password, final Context context, DataStatus status) {
         if (!TextUtils.isEmpty(userMail) && !TextUtils.isEmpty(password))
             mAuth.signInWithEmailAndPassword(userMail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
@@ -143,8 +143,6 @@ public class FirebaseDBHelper implements DBHelper {
                     }
                 }
             });
-        else
-            throw new InvalidParamsException();
     }
 
 
@@ -226,7 +224,7 @@ public class FirebaseDBHelper implements DBHelper {
 
 
     @Override
-    public void addStoreOfScificId(StoreModel model, DataStatus status) {
+    public void addStoreOfSpecificId(StoreModel model, DataStatus status) {
      mReference = mDatabase.getReference(STORE);
      if(!model.getIdStore().equals(""))
      mReference.child(model.getIdStore()).setValue(model)
@@ -246,15 +244,14 @@ public class FirebaseDBHelper implements DBHelper {
                 if(task.isSuccessful()){
                     String token = task.getResult().getToken();
                     Log.i("TOKEN", token);
-                    user.setToken(token);
-                    updateUsers(user,user.getId(),context);
+                    mDatabase.getReference(USER).child(user.getId()).child("token").setValue(token);
                 }
             }
         });
     }
 
     @Override
-    public void getTokenbyMail(String mail, DataStatus status) {
+    public void getTokenByMail(String mail, DataStatus status) {
         Log.i("MAILDB",mail);
         List<String> tokens = new ArrayList<>();
         mDatabase.getReference().child(USER).orderByChild("email").equalTo(mail).addValueEventListener(new ValueEventListener() {
@@ -265,8 +262,6 @@ public class FirebaseDBHelper implements DBHelper {
                     tokens.add(user.getToken());
                     Log.i("TOKENS", tokens.toString());
                 }
-
-
                 status.dataIsLoaded(tokens, null);
             }
 
@@ -288,8 +283,6 @@ public class FirebaseDBHelper implements DBHelper {
                     tokens.add(user.getToken());
                     Log.i("TOKENS", tokens.toString());
                 }
-
-
                 status.dataIsLoaded(tokens, null);
             }
 
@@ -307,32 +300,19 @@ public class FirebaseDBHelper implements DBHelper {
                 .addOnCompleteListener(x -> dataStatus.dataIsLoaded(null,null));
     }
 
+    @Override
+    public void setOutcome(String hId,String storeId, boolean outcome, DataStatus status) {
+        mDatabase.getReference(STORE).child(storeId).child(hId).child("accepted").setValue(outcome)
+                .addOnCompleteListener(x-> status.dataIsLoaded(null,null));
+    }
 
     @Override
     public void updateUsers(User model, String UId, Context context, DataStatus status) {
             mReference = mDatabase.getReference(USER);
-            mReference.child(UId).setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(context,context.getString(R.string.add),Toast.LENGTH_LONG).show();
-                    status.dataIsLoaded(null,null);
-                }
-            });
+            mReference.child(UId).setValue(model).addOnSuccessListener(aVoid ->
+                status.dataIsLoaded(null,null)
+            );
     }
-
-
-
-    private void updateUsers(User model, String UId, Context context) {
-        mReference = mDatabase.getReference(USER);
-        mReference.child(UId).setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(context,context.getString(R.string.user_updated),Toast.LENGTH_LONG).show();
-
-            }
-        });
-    }
-
 
 
     private void doQuery(Query query, Class myClass, List listUpdate, DataStatus status) {

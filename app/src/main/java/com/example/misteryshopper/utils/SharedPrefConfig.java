@@ -45,11 +45,9 @@ public class SharedPrefConfig {
     public User formJSON(String json) {
         if (json.contains(SHOPPER)) {
             ShopperModel model = g.fromJson(json, ShopperModel.class);
-            Log.i("SHREDpRESHOPPERMODEL", model.toString());
             return model;
         }else if(json.contains(EMPLOYER)) {
             EmployerModel model =  g.fromJson(json, EmployerModel.class);
-            Log.i("EMPLOYERMODEL", model.toString());
             return model;
         } else
             return null;
@@ -59,7 +57,6 @@ public class SharedPrefConfig {
     public void cancelData() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
-
         editor.commit();
     }
 }

@@ -8,8 +8,7 @@
     android:paddingLeft="40dp"
     android:paddingRight="40dp"
     android:gravity="center"
-    tools:context=".MainActivity"
-    android:background="@drawable/back_shape_color">
+    tools:context=".MainActivity">
     <TextView
         android:id="@+id/wellCometext"
         android:layout_width="match_parent"

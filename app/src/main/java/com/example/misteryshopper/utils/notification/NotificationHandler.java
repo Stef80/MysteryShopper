@@ -15,7 +15,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.activity.MyApplication;
-import com.example.misteryshopper.activity.ShopperProfileActivity;
+
 
 public class NotificationHandler {
 
@@ -23,7 +23,7 @@ public class NotificationHandler {
     public static final int NOTIFICATION_ID = 0;
     private static NotificationManager notificationManager;
 
-   public static void displayNotificationShopper(Context context, String title, String place, String when, String fee, String eName, String id) {
+   public static void displayNotificationShopper(Context context, String title, String place, String when, String fee, String eName, String id,String hId,String storeid) {
        RemoteViews collapsedView = new RemoteViews(context.getPackageName(),R.layout.notification_shopper_layout);
         collapsedView.setTextViewText(R.id.content_title_collapsed,title);
         collapsedView.setTextViewText(R.id.notification_ename_collapsed,eName);
@@ -40,16 +40,22 @@ public class NotificationHandler {
        Intent acceptIntent = new Intent(context, NotificationIntentHandler.class);
        acceptIntent.setAction("accept");
        acceptIntent.putExtra("id",id);
+       acceptIntent.putExtra("hId",hId);
+       acceptIntent.putExtra("storeId",storeid);
        expandedView.setOnClickPendingIntent(R.id.accept_button,PendingIntent.getService(context,0,acceptIntent,PendingIntent.FLAG_UPDATE_CURRENT));
 
        Intent declineIntent = new Intent(context,NotificationIntentHandler.class);
        declineIntent.setAction("decline");
        declineIntent.putExtra("id",id);
+       declineIntent.putExtra("hId",hId);
+       declineIntent.putExtra("storeId",storeid);
        expandedView.setOnClickPendingIntent(R.id.decline_button,PendingIntent.getService(context,1,declineIntent,PendingIntent.FLAG_UPDATE_CURRENT));
 
        Intent showIntent = new Intent(context,NotificationIntentHandler.class);
        showIntent.setAction("show");
        showIntent.putExtra("id",id);
+       showIntent.putExtra("hId",hId);
+       showIntent.putExtra("storeId",storeid);
        expandedView.setOnClickPendingIntent(R.id.show_button,PendingIntent.getService(context,2,showIntent,PendingIntent.FLAG_UPDATE_CURRENT));
        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MyApplication.PRIMARY_CHANNEL_ID)
                .setSmallIcon(R.drawable.i_notifiation)
@@ -75,6 +81,14 @@ public class NotificationHandler {
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
         notificationManager.notify(NOTIFICATION_ID,builder.build());
     }
+
+
+    public static void cancelNotification(){
+       notificationManager.cancel(NOTIFICATION_ID);
+    }
+
+
+
 
     public static void createNotificationChannel(Context context) {
        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){

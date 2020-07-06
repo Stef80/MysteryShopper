@@ -15,7 +15,6 @@ import com.example.misteryshopper.activity.ShopperProfileActivity;
 import com.example.misteryshopper.activity.StoreListActivity;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
-import com.example.misteryshopper.exception.InvalidParamsException;
 import com.example.misteryshopper.models.User;
 import com.example.misteryshopper.utils.DialogUIHelper;
 import com.example.misteryshopper.utils.SharedPrefConfig;
@@ -43,9 +42,8 @@ public class MainActivity extends AppCompatActivity {
             User user = sharedPrefConfig.readLoggedUser();
             String role = user.getRole();
             goByRole(role);
-            // startActivity(new Intent(MainActivity.this,ShopperListActivity.class));
-
         }
+
         userName = findViewById(R.id.eMailTxt);
         password = findViewById(R.id.pwdTxt);
 
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(passwordStr)) {
                     password.setError(getString(R.string.invalid_password));
                 }
-                try {
+
                     mDbHelper.login(user, passwordStr, MainActivity.this, new DBHelper.DataStatus() {
                         @Override
                         public void dataIsLoaded(List<?> obj, List<String> keys) {
@@ -70,10 +68,6 @@ public class MainActivity extends AppCompatActivity {
                             goByRole(((User)obj.get(0)).getRole());
                         }
                     });
-
-                } catch (InvalidParamsException e) {
-                    Toast.makeText(MainActivity.this, "invalid params", Toast.LENGTH_LONG).show();
-                }
             }
         });
 

@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="60dp"
-    android:background="@drawable/back_shape_color"
     tools:context=".activity.RegisterShopperActivity"
     >
 
@@ -197,7 +196,6 @@
                 android:layout_weight="1"
                 android:inputType="textPassword"
                 android:padding="10dp"
-               
                 android:textColor="@color/labelAndText"
                 />
         </LinearLayout>
