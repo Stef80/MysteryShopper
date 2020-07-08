@@ -46,4 +46,10 @@
     <string name="response_notification">shopper response</string>
     <string name="notification_response">request.</string>
     <string name="notification_has">has</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="accepted">accepted</string>
+    <string name="declined">declined</string>
+    <string name="waiting">waiting</string>
+    <string name="done">done</string>
 </resources>

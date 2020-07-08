@@ -34,7 +34,7 @@ public class ShopperListActivity extends AppCompatActivity implements RecyclerVi
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.app_name).toUpperCase());
+        getSupportActionBar().setTitle("");
 
         Intent intent = getIntent();
 

@@ -41,7 +41,7 @@ public class StoreListActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.app_name).toUpperCase());
+        getSupportActionBar().setTitle("");
 
         userID = new SharedPrefConfig(getApplicationContext()).readLoggedUser().getId();
         recyclerView = findViewById(R.id.recyclerView_shopper);

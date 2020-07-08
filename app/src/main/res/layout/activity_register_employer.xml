@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="60dp"
-    android:background="@drawable/back_shape_color"
     tools:context=".activity.RegisterEmployerActivity">
 
         <LinearLayout

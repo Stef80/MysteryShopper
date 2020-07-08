@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -12,7 +13,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.misteryshopper.MainActivity;
@@ -36,8 +39,9 @@ private TextView email;
 private TextView cf;
 private ImageView imgProfile;
 private Toolbar toolbar;
+private ViewPager pager;
+private LinearLayout layout;
 
-private final String ROLE = "role";
 private final String EMAIL = "email";
 
 
@@ -48,38 +52,38 @@ private final String EMAIL = "email";
 
         toolbar = findViewById(R.id.toolbar_profile);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.app_name).toUpperCase());
-
+        getSupportActionBar().setTitle("");
+        pager = findViewById(R.id.v_pager);
+        layout = findViewById(R.id.profile_layout);
         name = findViewById(R.id.profile_name);
         surname = findViewById(R.id.profile_surname);
         address = findViewById(R.id.profile_address);
         cf = findViewById(R.id.profile_cf);
-        city =findViewById(R.id.profile_city);
+        city = findViewById(R.id.profile_city);
         email = findViewById(R.id.profile_email);
-         String userMail= new SharedPrefConfig(getApplicationContext()).readLoggedUser().getEmail();
-         String mail = getIntent().getStringExtra(EMAIL);
-            Log.i("SHOPPERPROFILEMAIL", mail);
-            if(mail != null)
-        mDBHelper.getShopperByMail(mail, new DBHelper.DataStatus() {
-            @Override
-            public void dataIsLoaded(List<?> shopperList, List<String> keys) {
-                Log.i("SHOPPERPROFILE", shopperList.get(0).toString());
-                ShopperModel shopperModel = (ShopperModel) shopperList.get(0);
-                if(shopperModel != null) {
-                    name.setText(shopperModel.getName());
-                    surname.setText(shopperModel.getSurname());
-                    address.setText(shopperModel.getAddress());
-                    city.setText(shopperModel.getCity());
-                    cf.setText(shopperModel.getCf());
-                    email.setText(shopperModel.getEmail());
-                    if(mail.equals(userMail)){
-
+        String userMail = new SharedPrefConfig(getApplicationContext()).readLoggedUser().getEmail();
+        String mail = getIntent().getStringExtra(EMAIL);
+        Log.i("SHOPPERPROFILEMAIL", mail);
+        if (mail != null) {
+            if (!userMail.equals(mail)){
+                mDBHelper.getShopperByMail(mail, (shopperList, keys) -> {
+                    Log.i("SHOPPERPROFILE", shopperList.get(0).toString());
+                    ShopperModel shopperModel = (ShopperModel) shopperList.get(0);
+                    if (shopperModel != null) {
+                        name.setText(shopperModel.getName());
+                        surname.setText(shopperModel.getSurname());
+                        address.setText(shopperModel.getAddress());
+                        city.setText(shopperModel.getCity());
+                        cf.setText(shopperModel.getCf());
+                        email.setText(shopperModel.getEmail());
                     }
-                }
+                });
+        }else {
+                pager.setVisibility(View.VISIBLE);
+                layout.setVisibility(View.GONE);
+
             }
-
-        });
-
+    }
     }
 
     @Override
@@ -93,6 +97,7 @@ private final String EMAIL = "email";
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_add:
+                findViewById(R.id.item_add).setVisibility(View.GONE);
              break;
             case R.id.log_out:
                 mDBHelper.signOut(this);

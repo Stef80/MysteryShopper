@@ -45,7 +45,7 @@ public class NotificationIntentHandler extends IntentService {
                         acceptHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                mDBHelper.setOutcome(hId, storeId, true, new DBHelper.DataStatus() {
+                                mDBHelper.setOutcome(hId, true, new DBHelper.DataStatus() {
                                     @Override
                                     public void dataIsLoaded(List<?> obj, List<String> keys) {
                                         MessageCreationService.buildMessage(getApplicationContext(),
@@ -62,7 +62,7 @@ public class NotificationIntentHandler extends IntentService {
                         declineHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                mDBHelper.setOutcome(hId, storeId, false, new DBHelper.DataStatus() {
+                                mDBHelper.setOutcome(hId, false, new DBHelper.DataStatus() {
                                     @Override
                                     public void dataIsLoaded(List<?> obj, List<String> keys) {
                                         MessageCreationService.buildMessage(getApplicationContext(),

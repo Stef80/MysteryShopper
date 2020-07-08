@@ -17,7 +17,6 @@
         android:visibility="gone"
         android:gravity="center"
         android:textSize="36dp"
-        android:background="@drawable/back_shape_color"
         android:textColor="@color/labelAndText"
         android:text="@string/no_item_to_show"/>
 

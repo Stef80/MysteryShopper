@@ -44,7 +44,9 @@ public interface DBHelper {
 
     void addHiringModel(HiringModel model, DataStatus dataStatus);
 
-    void setOutcome(String hId,String storeId,boolean outcome,DataStatus status);
+    void setOutcome(String hId,boolean outcome,DataStatus status);
+
+    void getHireByMail(String mail, DataStatus status);
 
 
     public interface DataStatus {

@@ -296,14 +296,21 @@ public class FirebaseDBHelper implements DBHelper {
 
     @Override
     public void addHiringModel(HiringModel model, DataStatus dataStatus) {
-        mDatabase.getReference(STORE).child(model.getIdStore()).child(model.getId()).setValue(model)
+        mDatabase.getReference(HIRE).child(model.getId()).setValue(model)
                 .addOnCompleteListener(x -> dataStatus.dataIsLoaded(null,null));
     }
 
     @Override
-    public void setOutcome(String hId,String storeId, boolean outcome, DataStatus status) {
-        mDatabase.getReference(STORE).child(storeId).child(hId).child("accepted").setValue(outcome)
+    public void setOutcome(String hId, boolean outcome, DataStatus status) {
+        mDatabase.getReference(HIRE).child(hId).child("accepted").setValue(outcome)
                 .addOnCompleteListener(x-> status.dataIsLoaded(null,null));
+    }
+
+    @Override
+    public void getHireByMail(String mail, DataStatus status) {
+        List<HiringModel> list = new ArrayList<>();
+        Query query = mDatabase.getReference(HIRE).orderByChild("mailShopper").equalTo(mail);
+        doQuery(query,HiringModel.class,list,status);
     }
 
     @Override

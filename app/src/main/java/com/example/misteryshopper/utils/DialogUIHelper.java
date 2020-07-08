@@ -3,7 +3,6 @@ package com.example.misteryshopper.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,12 +72,13 @@ public class DialogUIHelper {
         View dialogView = inflater.inflate(R.layout.dialog_add_shop, null);
         AlertDialog dialog = builder.create();
         dialog.setView(dialogView);
-        EditText idShop = dialogView.findViewById(R.id.id_shop_add);
-        EditText manager = dialogView.findViewById(R.id.shop_manager_name_add);
-        EditText city = dialogView.findViewById(R.id.shop_city_add);
-        EditText address = dialogView.findViewById(R.id.shop_address_add);
-        Button btnAdd = dialogView.findViewById(R.id.button_shop_add);
-
+        EditText idShop = dialogView.findViewById(R.id.id_store_add);
+        EditText manager = dialogView.findViewById(R.id.manager_name_store_add);
+        EditText city = dialogView.findViewById(R.id.city_store_add);
+        EditText address = dialogView.findViewById(R.id.address_store_add);
+        Button btnAdd = dialogView.findViewById(R.id.button_store_add);
+        Button btnCancel = dialogView.findViewById(R.id.button_store_cancel);
+        btnCancel.setOnClickListener(onClick->dialog.dismiss());
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,7 +160,6 @@ public class DialogUIHelper {
                    String now =  String.valueOf(System.currentTimeMillis());
                    HiringModel hiringModel = new HiringModel(now + idEmployer, model.getEmployerName(),
                            idEmployer, mailShopper, model.getIdStore(), dateStr, feeNumber);
-
                    mDBHelper.addHiringModel(hiringModel, new DBHelper.DataStatus() {
                        @Override
                        public void dataIsLoaded(List<?> obj, List<String> keys) {
