@@ -1,9 +1,10 @@
 package com.example.misteryshopper.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShopperModel extends User{
+public class ShopperModel extends User implements Serializable {
 
 
     String name;
@@ -11,6 +12,7 @@ public class ShopperModel extends User{
     String address;
     String city;
     String cf;
+    String imageUri;
     boolean available;
 
 
@@ -84,6 +86,14 @@ public class ShopperModel extends User{
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 
     @Override

@@ -10,7 +10,7 @@ public class HiringModel {
     String idStore;
     String date;
     double fee;
-    boolean accepted;
+    String accepted;
     boolean done;
 
     public HiringModel() {
@@ -24,7 +24,6 @@ public class HiringModel {
         this.date = date;
         this.fee = fee;
         this.employerName = employerName;
-        accepted = false;
         done = false;
     }
 
@@ -76,11 +75,11 @@ public class HiringModel {
         this.fee = fee;
     }
 
-    public boolean isAccepted() {
+    public String isAccepted() {
         return accepted;
     }
 
-    public void setAccepted(boolean accepted) {
+    public void setAccepted(String accepted) {
         this.accepted = accepted;
     }
 

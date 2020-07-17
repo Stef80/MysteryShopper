@@ -7,10 +7,11 @@ public class StoreModel implements Serializable {
 
     String idStore;
     String idEmployer;
-    String employerName;
+    String eName;
     String manager;
     String city;
     String address;
+    String imageUri;
 
     public StoreModel() {
     }
@@ -35,12 +36,12 @@ public class StoreModel implements Serializable {
         this.idEmployer = idEmployer;
     }
 
-    public String getEmployerName() {
-        return employerName;
+    public String geteName() {
+        return eName;
     }
 
-    public void setEmployerName(String employerName) {
-        this.employerName = employerName;
+    public void seteName(String eName) {
+        this.eName = eName;
     }
 
     public void setManager(String manager) {
@@ -61,5 +62,13 @@ public class StoreModel implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 }

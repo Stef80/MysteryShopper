@@ -49,17 +49,37 @@ public class StoreListActivity extends AppCompatActivity {
             mDBHelper.readStoreOfSpecificUser(userID, new DBHelper.DataStatus() {
                 @Override
                 public void dataIsLoaded(List<?> obj, List<String> keys) {
-                    if(obj.isEmpty())
+                    if(obj.isEmpty()) {
                         textEmpty.setVisibility(View.VISIBLE);
-                    else
-                    new RecyclerViewConfig(null).setConfigList(recyclerView, StoreListActivity.this, (List<StoreModel>) obj,
-                            keys, null);
-                    textEmpty.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        new RecyclerViewConfig(null).setConfigList(recyclerView, StoreListActivity.this, (List<StoreModel>) obj,
+                                keys, null);
+                        textEmpty.setVisibility(View.GONE);
+                    }
                 }
             });
 
 
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        mDBHelper.readStoreOfSpecificUser(userID, new DBHelper.DataStatus() {
+//            @Override
+//            public void dataIsLoaded(List<?> obj, List<String> keys) {
+//                if(obj.isEmpty()) {
+//                    textEmpty.setVisibility(View.VISIBLE);
+//                    recyclerView.setVisibility(View.GONE);
+//                } else {
+//                    new RecyclerViewConfig(null).setConfigList(recyclerView, StoreListActivity.this, (List<StoreModel>) obj,
+//                            keys, null);
+//                    textEmpty.setVisibility(View.GONE);
+//                }
+//            }
+//        });
+ //   }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

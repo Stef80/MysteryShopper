@@ -2,8 +2,11 @@ package com.example.misteryshopper.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,22 +14,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.activity.ShopperListActivity;
+import com.example.misteryshopper.datbase.DBHelper;
+import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.example.misteryshopper.models.HiringModel;
 import com.example.misteryshopper.models.ShopperModel;
 import com.example.misteryshopper.models.StoreModel;
-import com.google.api.client.util.DateTime;
+import com.example.misteryshopper.utils.notification.MessageCreationService;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 
@@ -76,7 +82,11 @@ public class RecyclerViewConfig {
             name.setText(shopper.getName());
             surname.setText(shopper.getSurname());
             city.setText(shopper.getCity());
+            String uri = shopper.getImageUri();
+            if(!TextUtils.isEmpty(uri)) {
+                Glide.with(context).load(uri).into(image);
 
+            }
             this.key = key;
             hireBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,6 +116,7 @@ public class RecyclerViewConfig {
         private TextView manger;
         private Button searchBtn;
         private TextView employerName;
+        private ImageView imgBuilding;
         private String key;
         private OnItemClickListener clickListener;
 
@@ -116,15 +127,22 @@ public class RecyclerViewConfig {
             manger = itemView.findViewById(R.id.shop_manager_name);
             address = itemView.findViewById(R.id.address_shop_text);
             searchBtn = itemView.findViewById(R.id.button_serch_shop);
+            employerName = itemView.findViewById(R.id.employer_name);
+            imgBuilding = itemView.findViewById(R.id.image_building);
 
             this.clickListener = listener;
         }
 
         public void bind(StoreModel storeModel, String key) {
             idShop.setText(storeModel.getIdStore());
+            employerName.setText(storeModel.geteName());
             manger.setText(storeModel.getManager());
             city.setText(storeModel.getCity());
             address.setText(storeModel.getAddress());
+            String img = storeModel.getImageUri();
+            if(!TextUtils.isEmpty(img)){
+                Glide.with(context).load(img).into(imgBuilding);
+            }
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -151,44 +169,77 @@ public class RecyclerViewConfig {
         private TextView eName;
         private TextView idStore;
         private TextView hDate;
+        private TextView hFee;
         private TextView confirmLabel;
         private Button btnConfirm;
+        private DBHelper mDBHelper;
         private String key;
 
 
         public HireItemView(@NonNull ViewGroup parent) {
             super(LayoutInflater.from(context).inflate(R.layout.item_shopper_profile_fragment, parent, false));
-
+            mDBHelper = FirebaseDBHelper.getInstance();
             eName = itemView.findViewById(R.id.hire_name_employer);
             idStore = itemView.findViewById(R.id.hire_id_store);
             hDate = itemView.findViewById(R.id.hire_date);
+            hFee = itemView.findViewById(R.id.hire_fee);
             confirmLabel = itemView.findViewById(R.id.hire_confirm_label);
+            btnConfirm = itemView.findViewById(R.id.hire_button_confirm);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        public void bind(HiringModel hiringModel, String key) {
+        public void bind(HiringModel hiringModel, String key)  {
             eName.setText(hiringModel.getEmployerName());
             idStore.setText(hiringModel.getIdStore());
+            hFee.setText(String.valueOf(hiringModel.getFee()));
             String date = hiringModel.getDate();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/YYYY");
-            LocalDate hireDate = LocalDate.parse(date,formatter);
-            hDate.setText(date);
-            boolean confirm = hiringModel.isAccepted();
-            if(confirm) {
-                confirmLabel.setText(context.getString(R.string.accepted));
-                btnConfirm.setEnabled(false);
-            }else if(!btnConfirm.isEnabled() && !confirm){
-                confirmLabel.setText(context.getString(R.string.declined));
-            }else if(btnConfirm.isEnabled() && !confirm){
-                confirmLabel.setText(context.getString(R.string.waiting));
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date hireDate = null;
+            try {
+             hireDate = formatter.parse(date);
+            }catch (ParseException e){
+                e.printStackTrace();
             }
-            if(hireDate.isBefore(LocalDate.now())){
-                confirmLabel.setText(context.getString(R.string.done));
+            hDate.setText(date);
+
+            String confirm = hiringModel.isAccepted();
+
+            if(confirm == null || confirm.equals("")){
+                confirmLabel.setText(R.string.waiting);
+            }else if(confirm.equals("declined")){
+                confirmLabel.setText(R.string.declined);
+                btnConfirm.setEnabled(false);
+            }else if(confirm.equals("accepted")){
+                confirmLabel.setText(R.string.accepted);
+                btnConfirm.setEnabled(false);
+            }
+
+
+            if(hireDate.before(new Date()) && !hiringModel.isDone()){
+               mDBHelper.setHireDone(hiringModel.getId());
+                btnConfirm.setEnabled(false);
             }
 
           btnConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    SharedPrefConfig preferences = new SharedPrefConfig(context);
+                    ShopperModel shopperModel = (ShopperModel) preferences.readLoggedUser();
+                    String name = shopperModel.getName();
+                    String surname = shopperModel.getSurname();
+                    mDBHelper.getTokenById(hiringModel.getIdEmployer(), new DBHelper.DataStatus() {
+                        @Override
+                        public void dataIsLoaded(List<?> obj, List<String> keys) {
+                            String token = (String) obj.get(0);
+                            MessageCreationService.buildMessage(context,token,context.getString(R.string.response_notification),
+                                    name + " " + surname,context.getString(R.string.accepted));
+                            mDBHelper.setOutcome(hiringModel.getId(), "accepted",(status,key)-> {
+                                Toast.makeText(context, context.getString(R.string.accepted), Toast.LENGTH_SHORT).show();
+                            });
+                            confirmLabel.setText(context.getString(R.string.accepted));
+                            btnConfirm.setEnabled(false);
+                        }
+                    });
 
                 }
             });

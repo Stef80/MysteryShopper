@@ -95,7 +95,7 @@ public class DialogUIHelper {
                 if(TextUtils.isEmpty(adr))
                     address.setError(context.getString(R.string.field_required));
                 model.setIdStore(id);
-                model.setEmployerName(((EmployerModel)new SharedPrefConfig(context).readLoggedUser()).getEmName());
+                model.seteName(((EmployerModel)new SharedPrefConfig(context).readLoggedUser()).getEmName());
                 model.setManager(manager.getText().toString());
                 model.setCity(city.getText().toString());
                 model.setAddress(address.getText().toString());
@@ -150,7 +150,7 @@ public class DialogUIHelper {
             @Override
             public void onClick(View v) {
                String dateStr = date.getDayOfMonth()+"/"+
-                date.getMonth()+"/"+
+                       (date.getMonth()+1)+"/"+
                 date.getYear();
                String feeStr =fee.getText().toString();
                if(TextUtils.isEmpty(feeStr)){
@@ -158,8 +158,8 @@ public class DialogUIHelper {
                }else {
                    Double feeNumber = Double.valueOf(feeStr);
                    String now =  String.valueOf(System.currentTimeMillis());
-                   HiringModel hiringModel = new HiringModel(now + idEmployer, model.getEmployerName(),
-                           idEmployer, mailShopper, model.getIdStore(), dateStr, feeNumber);
+                   HiringModel hiringModel = new HiringModel(now + idEmployer, idEmployer,
+                           model.geteName(), mailShopper, model.getIdStore(), dateStr, feeNumber);
                    mDBHelper.addHiringModel(hiringModel, new DBHelper.DataStatus() {
                        @Override
                        public void dataIsLoaded(List<?> obj, List<String> keys) {
@@ -167,7 +167,7 @@ public class DialogUIHelper {
                                Log.i("DILAOGTOKEN", (String) obj1.get(0));
                                MessageCreationService.buildMessage(context, (String) obj1.get(0),
                                        context.getString(R.string.notification_of_employment), model.getCity() + "\n" + model.getAddress()
-                                       , dateStr, String.valueOf(feeNumber), model.getEmployerName(),
+                                       , dateStr, String.valueOf(feeNumber), model.geteName(),
                                        idEmployer,hiringModel.getId(),model.getIdStore());
                            });
                            dialog.dismiss();
@@ -179,4 +179,6 @@ public class DialogUIHelper {
 
         dialog.show();
     }
+
+
 }

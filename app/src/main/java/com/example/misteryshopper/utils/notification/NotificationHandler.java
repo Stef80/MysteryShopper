@@ -59,6 +59,8 @@ public class NotificationHandler {
        expandedView.setOnClickPendingIntent(R.id.show_button,PendingIntent.getService(context,2,showIntent,PendingIntent.FLAG_UPDATE_CURRENT));
        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MyApplication.PRIMARY_CHANNEL_ID)
                .setSmallIcon(R.drawable.i_notifiation)
+               .setContentTitle(title)
+               .setCustomHeadsUpContentView(collapsedView)
                .setCustomContentView(collapsedView)
                .setCustomBigContentView(expandedView)
                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -76,7 +78,7 @@ public class NotificationHandler {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MyApplication.PRIMARY_CHANNEL_ID)
                 .setSmallIcon(R.drawable.i_notifiation)
-                .setCustomBigContentView(customView)
+                .setCustomContentView(customView)
                 .setAutoCancel(true)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
         notificationManager.notify(NOTIFICATION_ID,builder.build());

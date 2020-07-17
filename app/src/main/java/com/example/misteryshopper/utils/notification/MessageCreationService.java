@@ -11,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.misteryshopper.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,7 @@ public class MessageCreationService {
         try {
             notification.put("to","topics/"+token);
             body.put("title", notificationTitle);
-            if(when == null){
+            if(notificationTitle.equals(context.getString(R.string.response_notification))){
                 body.put("sName", place);
                 body.put("outcome",fee);
             }else {

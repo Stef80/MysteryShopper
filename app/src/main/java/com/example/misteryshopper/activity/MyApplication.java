@@ -13,13 +13,12 @@ public class MyApplication extends Application {
     private static final String ACTION_UPDATE_NOTIFICATION =
             "com.example.mysteryshopper.activity.ACTION_UPDATE_NOTIFICATION";
     public static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
- //   public static final String PRIMARY2_CHANNEL_ID = "primary2_notification_channel";
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         NotificationHandler.createNotificationChannel(this);
 
-       // registerReceiver(new NotificationHandler.NotificationReciver(),new IntentFilter(ACTION_UPDATE_NOTIFICATION));
     }
 }

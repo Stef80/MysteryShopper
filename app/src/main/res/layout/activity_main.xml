@@ -8,6 +8,7 @@
     android:paddingLeft="40dp"
     android:paddingRight="40dp"
     android:gravity="center"
+    android:background="@drawable/toolbar_shape_background"
     tools:context=".MainActivity">
     <TextView
         android:id="@+id/wellCometext"
@@ -32,7 +33,7 @@
                 android:hint="Email"
                 android:textColorHint="@color/labelAndText"
                 android:textColor="@color/labelAndText"
-
+                android:background="@drawable/background_text_shape"
                 android:inputType="textEmailAddress" />
 
 
@@ -45,6 +46,7 @@
                 android:ems="10"
                 android:layout_marginTop="20dp"
                 android:hint="@string/prompt_password"
+                android:background="@drawable/background_text_shape"
                 android:textColorHint="@color/labelAndText"
                 android:textColor="@color/labelAndText"
                 android:inputType="textPassword" />
@@ -95,7 +97,7 @@
 
         <TextView
             android:id="@+id/registerText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="60dp"

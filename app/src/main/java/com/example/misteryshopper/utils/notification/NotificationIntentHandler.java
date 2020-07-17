@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.example.misteryshopper.MainActivity;
 import com.example.misteryshopper.R;
+import com.example.misteryshopper.activity.ShopperProfileActivity;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.example.misteryshopper.models.ShopperModel;
@@ -37,6 +39,7 @@ public class NotificationIntentHandler extends IntentService {
             @Override
             public void dataIsLoaded(List<?> obj, List<String> keys) {
                 String token = (String) obj.get(0);
+                Log.i("TOKEN NOTIFICATIONH", token);
                 String hId = extras.getString("hId");
                 String storeId = extras.getString("storeId");
                 switch (intent.getAction()) {
@@ -45,7 +48,7 @@ public class NotificationIntentHandler extends IntentService {
                         acceptHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                mDBHelper.setOutcome(hId, true, new DBHelper.DataStatus() {
+                                mDBHelper.setOutcome(hId, "accepted", new DBHelper.DataStatus() {
                                     @Override
                                     public void dataIsLoaded(List<?> obj, List<String> keys) {
                                         MessageCreationService.buildMessage(getApplicationContext(),
@@ -62,7 +65,7 @@ public class NotificationIntentHandler extends IntentService {
                         declineHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                mDBHelper.setOutcome(hId, false, new DBHelper.DataStatus() {
+                                mDBHelper.setOutcome(hId, "declined", new DBHelper.DataStatus() {
                                     @Override
                                     public void dataIsLoaded(List<?> obj, List<String> keys) {
                                         MessageCreationService.buildMessage(getApplicationContext(),

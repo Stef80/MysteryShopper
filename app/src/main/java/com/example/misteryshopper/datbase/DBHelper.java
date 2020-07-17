@@ -1,6 +1,7 @@
 package com.example.misteryshopper.datbase;
 
 import android.content.Context;
+import android.net.Uri;
 
 
 import com.example.misteryshopper.models.HiringModel;
@@ -44,9 +45,13 @@ public interface DBHelper {
 
     void addHiringModel(HiringModel model, DataStatus dataStatus);
 
-    void setOutcome(String hId,boolean outcome,DataStatus status);
+    void setOutcome(String hId,String outcome,DataStatus status);
 
     void getHireByMail(String mail, DataStatus status);
+
+    void setHireDone(String id);
+
+    void addImageToUserById(String id, Uri imageUri,Context context, DataStatus status);
 
 
     public interface DataStatus {

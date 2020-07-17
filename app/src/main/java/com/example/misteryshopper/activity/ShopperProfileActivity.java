@@ -1,15 +1,12 @@
 package com.example.misteryshopper.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.viewpager.widget.ViewPager;
-
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,31 +15,50 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.annotation.GlideModule;
 import com.example.misteryshopper.MainActivity;
 import com.example.misteryshopper.R;
-import com.example.misteryshopper.models.ShopperModel;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
+import com.example.misteryshopper.models.ShopperModel;
+import com.example.misteryshopper.utils.MyPagerAdapter;
 import com.example.misteryshopper.utils.SharedPrefConfig;
-import com.example.misteryshopper.utils.notification.NotificationHandler;
+import com.example.misteryshopper.utils.camera.PictureHandler;
 
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
 public class ShopperProfileActivity extends AppCompatActivity {
 
-private DBHelper mDBHelper = FirebaseDBHelper.getInstance();
-private TextView name;
-private TextView surname;
-private TextView address;
-private TextView city;
-private TextView email;
-private TextView cf;
-private ImageView imgProfile;
-private Toolbar toolbar;
-private ViewPager pager;
-private LinearLayout layout;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private DBHelper mDBHelper = FirebaseDBHelper.getInstance();
+    private TextView name;
+    private TextView surname;
+    private TextView address;
+    private TextView city;
+    private TextView email;
+    private TextView cf;
+    private ImageView imgProfile;
+    private Toolbar toolbar;
+    private ViewPager pager;
+    private LinearLayout layout;
+    private FragmentPagerAdapter pagerAdapter;
 
-private final String EMAIL = "email";
+    private ShopperModel shopperModel;
+    private SharedPrefConfig config;
+    private Uri mImageUri;
+    private final String EMAIL = "email";
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
 
     @Override
@@ -50,9 +66,13 @@ private final String EMAIL = "email";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopper_profile);
 
+        config = new SharedPrefConfig(getApplicationContext());
+
+
         toolbar = findViewById(R.id.toolbar_profile);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+
         pager = findViewById(R.id.v_pager);
         layout = findViewById(R.id.profile_layout);
         name = findViewById(R.id.profile_name);
@@ -61,51 +81,83 @@ private final String EMAIL = "email";
         cf = findViewById(R.id.profile_cf);
         city = findViewById(R.id.profile_city);
         email = findViewById(R.id.profile_email);
-        String userMail = new SharedPrefConfig(getApplicationContext()).readLoggedUser().getEmail();
-        String mail = getIntent().getStringExtra(EMAIL);
-        Log.i("SHOPPERPROFILEMAIL", mail);
-        if (mail != null) {
-            if (!userMail.equals(mail)){
-                mDBHelper.getShopperByMail(mail, (shopperList, keys) -> {
-                    Log.i("SHOPPERPROFILE", shopperList.get(0).toString());
-                    ShopperModel shopperModel = (ShopperModel) shopperList.get(0);
-                    if (shopperModel != null) {
-                        name.setText(shopperModel.getName());
-                        surname.setText(shopperModel.getSurname());
-                        address.setText(shopperModel.getAddress());
-                        city.setText(shopperModel.getCity());
-                        cf.setText(shopperModel.getCf());
-                        email.setText(shopperModel.getEmail());
+        imgProfile = findViewById(R.id.profile_image);
+
+            String userMail = config.readLoggedUser().getEmail();
+            String mail = getIntent().getStringExtra(EMAIL);
+        if(mail !=null) {
+                if (!userMail.equals(mail)) {
+                    mDBHelper.getShopperByMail(mail, (shopperList, keys) -> {
+                        Log.i("SHOPPERPROFILE", shopperList.get(0).toString());
+                        shopperModel = (ShopperModel) shopperList.get(0);
+                        if (shopperModel != null) {
+                            name.setText(shopperModel.getName());
+                            surname.setText(shopperModel.getSurname());
+                            address.setText(shopperModel.getAddress());
+                            city.setText(shopperModel.getCity());
+                            cf.setText(shopperModel.getCf());
+                            email.setText(shopperModel.getEmail());
+                            String imgUrl = shopperModel.getImageUri();
+                            if(!TextUtils.isEmpty(imgUrl))
+                                imgProfile.setImageURI(Uri.parse(imgUrl));
+
+                        }
+                    });
+                } else {
+                    shopperModel = (ShopperModel)config.readLoggedUser();
+                    String imgUrl = shopperModel.getImageUri();
+                    if(TextUtils.isEmpty(imgUrl) && imgUrl == null) {
+                        imgProfile.setOnClickListener(new View.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
+                            @Override
+                            public void onClick(View v) {
+                                PictureHandler.getPicture(ShopperProfileActivity.this);
+                            }
+                        });
+                    } else {
+                        imgProfile.setImageURI(Uri.parse(imgUrl));
                     }
-                });
-        }else {
-                pager.setVisibility(View.VISIBLE);
-                layout.setVisibility(View.GONE);
-
+                    pager.setVisibility(View.VISIBLE);
+                    layout.setVisibility(View.GONE);
+                    pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, shopperModel);
+                    pager.setAdapter(pagerAdapter);
+                }
             }
-    }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.my_menu,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.item_add:
-                findViewById(R.id.item_add).setVisibility(View.GONE);
-             break;
-            case R.id.log_out:
-                mDBHelper.signOut(this);
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                break;
         }
-        return super.onOptionsItemSelected(item);
+
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+                super.onActivityResult(requestCode, resultCode, data);
+                if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                    PictureHandler.uploadImage(shopperModel.getId(),imgProfile,getApplicationContext());
+                }
+            }
+
+
+
+        @Override
+        public boolean onCreateOptionsMenu (Menu menu){
+            getMenuInflater().inflate(R.menu.my_menu, menu);
+            menu.removeItem(R.id.item_add);
+            return super.onCreateOptionsMenu(menu);
+        }
+
+
+        @Override
+        public boolean onOptionsItemSelected (@NonNull MenuItem item){
+            switch (item.getItemId()) {
+                case R.id.item_add:
+                    findViewById(R.id.item_add).setVisibility(View.GONE);
+                    break;
+                case R.id.log_out:
+                    mDBHelper.signOut(this);
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    break;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+
+
     }
-
-
-}

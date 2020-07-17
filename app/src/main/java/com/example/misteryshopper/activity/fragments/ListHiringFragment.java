@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,7 @@ import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.example.misteryshopper.models.StoreModel;
 import com.example.misteryshopper.utils.RecyclerViewConfig;
+import com.example.misteryshopper.utils.SharedPrefConfig;
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class ListHiringFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private DBHelper mDBHelper = FirebaseDBHelper.getInstance();
     private int column = 1;
-    private final String EMAIL = "email";
+
 
     public ListHiringFragment() {
         // Required empty public constructor
@@ -63,13 +65,21 @@ public class ListHiringFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        String mail = new Intent().getExtras().getString(EMAIL);
+        String mail = new SharedPrefConfig(getContext()).readLoggedUser().getEmail();
         View view = inflater.inflate(R.layout.fragment_list_hiring, container, false);
+        TextView listEmpty = view.findViewById(R.id.emptyState_hiring_list);
+        RecyclerView recyclerView = view.findViewById(R.id.list_hires);
         mDBHelper.getHireByMail(mail, new DBHelper.DataStatus() {
             @Override
             public void dataIsLoaded(List<?> obj, List<String> keys) {
-                new RecyclerViewConfig(null).setConfigList((RecyclerView) view, container.getContext(), (List<StoreModel>) obj,
-                        keys, null);
+                if(obj.isEmpty()) {
+                    listEmpty.setVisibility(View.VISIBLE);
+                }else{
+                    new RecyclerViewConfig(null).setConfigList(recyclerView, container.getContext(), (List<StoreModel>) obj,
+                            keys, null);
+                    listEmpty.setVisibility(View.GONE);
+                }
+
             }
         });
      return view;

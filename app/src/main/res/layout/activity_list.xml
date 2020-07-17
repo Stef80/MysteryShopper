@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/emptyState"
-        android:visibility="gone"
         android:gravity="center"
+        android:visibility="gone"
         android:textSize="36dp"
         android:textColor="@color/labelAndText"
         android:text="@string/no_item_to_show"/>

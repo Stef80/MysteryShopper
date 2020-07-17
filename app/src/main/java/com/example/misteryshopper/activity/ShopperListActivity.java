@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,7 @@ public class ShopperListActivity extends AppCompatActivity implements RecyclerVi
     private RecyclerView recyclerView;
     private DBHelper mDbHelper = FirebaseDBHelper.getInstance();
     private Toolbar toolbar;
+    private TextView  textEmpty ;
     private List<ShopperModel> shopperList;
 
     @Override
@@ -37,14 +40,19 @@ public class ShopperListActivity extends AppCompatActivity implements RecyclerVi
         getSupportActionBar().setTitle("");
 
         Intent intent = getIntent();
-
+        textEmpty = findViewById(R.id.emptyState);
         recyclerView = findViewById(R.id.recyclerView_shopper);
         mDbHelper.readShoppers(new FirebaseDBHelper.DataStatus() {
             @Override
             public void dataIsLoaded(List<? extends Object> obj, List<String> keys) {
-                shopperList = (List<ShopperModel>) obj;
-                new RecyclerViewConfig(intent).setConfigList(recyclerView, ShopperListActivity.this, (List<ShopperModel>) obj,
-                        keys,ShopperListActivity.this);
+                if (obj.isEmpty())
+                    textEmpty.setVisibility(View.VISIBLE);
+                else {
+                    shopperList = (List<ShopperModel>) obj;
+                    new RecyclerViewConfig(intent).setConfigList(recyclerView, ShopperListActivity.this, (List<ShopperModel>) obj,
+                            keys, ShopperListActivity.this);
+                    textEmpty.setVisibility(View.GONE);
+                }
             }
         });
     }
