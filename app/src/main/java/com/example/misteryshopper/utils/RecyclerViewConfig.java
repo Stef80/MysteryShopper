@@ -2,6 +2,9 @@ package com.example.misteryshopper.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Picture;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -21,7 +24,6 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.activity.ShopperListActivity;
 import com.example.misteryshopper.datbase.DBHelper;
@@ -29,7 +31,10 @@ import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.example.misteryshopper.models.HiringModel;
 import com.example.misteryshopper.models.ShopperModel;
 import com.example.misteryshopper.models.StoreModel;
+import com.example.misteryshopper.utils.camera.CircleTransform;
+import com.example.misteryshopper.utils.camera.PictureHandler;
 import com.example.misteryshopper.utils.notification.MessageCreationService;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -61,7 +66,7 @@ public class RecyclerViewConfig {
         private TextView surname;
         private TextView city;
         private String key;
-        private ImageView image;
+        private ImageView imgProfile;
         private Button hireBtn;
         private OnItemClickListener clickListener;
 
@@ -70,7 +75,7 @@ public class RecyclerViewConfig {
             name = itemView.findViewById(R.id.nameLabel);
             surname = itemView.findViewById(R.id.surname_label);
             city = itemView.findViewById(R.id.cityTxt);
-            image = itemView.findViewById(R.id.imageView);
+            imgProfile = itemView.findViewById(R.id.imageView);
             hireBtn = itemView.findViewById(R.id.button_confirm);
 
             this.clickListener = clickListener;
@@ -82,9 +87,9 @@ public class RecyclerViewConfig {
             name.setText(shopper.getName());
             surname.setText(shopper.getSurname());
             city.setText(shopper.getCity());
-            String uri = shopper.getImageUri();
-            if(!TextUtils.isEmpty(uri)) {
-                Glide.with(context).load(uri).into(image);
+            String imageUri = shopper.getImageUri();
+            if (!TextUtils.isEmpty(imageUri)) {
+                Picasso.get().load(imageUri).fit().transform(new CircleTransform(true)).into(imgProfile);
 
             }
             this.key = key;
@@ -140,8 +145,9 @@ public class RecyclerViewConfig {
             city.setText(storeModel.getCity());
             address.setText(storeModel.getAddress());
             String img = storeModel.getImageUri();
-            if(!TextUtils.isEmpty(img)){
-                Glide.with(context).load(img).into(imgBuilding);
+            if (!TextUtils.isEmpty(img)) {
+                Picasso.get().load(img).transform(new CircleTransform()).into(imgBuilding);
+
             }
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -188,7 +194,7 @@ public class RecyclerViewConfig {
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        public void bind(HiringModel hiringModel, String key)  {
+        public void bind(HiringModel hiringModel, String key) {
             eName.setText(hiringModel.getEmployerName());
             idStore.setText(hiringModel.getIdStore());
             hFee.setText(String.valueOf(hiringModel.getFee()));
@@ -196,31 +202,31 @@ public class RecyclerViewConfig {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             Date hireDate = null;
             try {
-             hireDate = formatter.parse(date);
-            }catch (ParseException e){
+                hireDate = formatter.parse(date);
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
             hDate.setText(date);
 
             String confirm = hiringModel.isAccepted();
 
-            if(confirm == null || confirm.equals("")){
+            if (confirm == null || confirm.equals("")) {
                 confirmLabel.setText(R.string.waiting);
-            }else if(confirm.equals("declined")){
+            } else if (confirm.equals("declined")) {
                 confirmLabel.setText(R.string.declined);
                 btnConfirm.setEnabled(false);
-            }else if(confirm.equals("accepted")){
+            } else if (confirm.equals("accepted")) {
                 confirmLabel.setText(R.string.accepted);
                 btnConfirm.setEnabled(false);
             }
 
 
-            if(hireDate.before(new Date()) && !hiringModel.isDone()){
-               mDBHelper.setHireDone(hiringModel.getId());
+            if (hireDate.before(new Date()) && !hiringModel.isDone()) {
+                mDBHelper.setHireDone(hiringModel.getId());
                 btnConfirm.setEnabled(false);
             }
 
-          btnConfirm.setOnClickListener(new View.OnClickListener() {
+            btnConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     SharedPrefConfig preferences = new SharedPrefConfig(context);
@@ -231,9 +237,9 @@ public class RecyclerViewConfig {
                         @Override
                         public void dataIsLoaded(List<?> obj, List<String> keys) {
                             String token = (String) obj.get(0);
-                            MessageCreationService.buildMessage(context,token,context.getString(R.string.response_notification),
-                                    name + " " + surname,context.getString(R.string.accepted));
-                            mDBHelper.setOutcome(hiringModel.getId(), "accepted",(status,key)-> {
+                            MessageCreationService.buildMessage(context, token, context.getString(R.string.response_notification),
+                                    name + " " + surname, context.getString(R.string.accepted));
+                            mDBHelper.setOutcome(hiringModel.getId(), "accepted", (status, key) -> {
                                 Toast.makeText(context, context.getString(R.string.accepted), Toast.LENGTH_SHORT).show();
                             });
                             confirmLabel.setText(context.getString(R.string.accepted));
@@ -298,7 +304,7 @@ public class RecyclerViewConfig {
                     break;
                 case ITEM_HIRE:
                     HireItemView itemViewHire = (HireItemView) holder;
-                    itemViewHire.bind((HiringModel) modelList.get(position),keys.get(position));
+                    itemViewHire.bind((HiringModel) modelList.get(position), keys.get(position));
             }
 
         }
@@ -314,7 +320,7 @@ public class RecyclerViewConfig {
                 return ITEM_SHOPPER;
             } else if (modelList.get(position) instanceof StoreModel) {
                 return ITEM_STORE;
-            }else if(modelList.get(position)instanceof HiringModel){
+            } else if (modelList.get(position) instanceof HiringModel) {
                 return ITEM_HIRE;
             }
             return -1;

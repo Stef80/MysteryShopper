@@ -1,6 +1,8 @@
 package com.example.misteryshopper.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +24,7 @@ import com.example.misteryshopper.utils.DialogUIHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.example.misteryshopper.utils.RecyclerViewConfig;
 import com.example.misteryshopper.utils.SharedPrefConfig;
+import com.example.misteryshopper.utils.camera.PictureHandler;
 
 
 import java.util.List;
@@ -33,6 +37,10 @@ public class StoreListActivity extends AppCompatActivity {
     private List<StoreModel> storeModelList;
     private TextView textEmpty;
     String userID;
+
+    public StoreListActivity getReference() {
+        return StoreListActivity.this;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +69,17 @@ public class StoreListActivity extends AppCompatActivity {
             });
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Intent idIntent = getIntent();
+            String idStore = idIntent.getStringExtra("store_id");
+            PictureHandler.uploadImage(idStore,null,"Store",getApplicationContext());
+        }
     }
 
 //    @Override

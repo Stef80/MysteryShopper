@@ -1,8 +1,17 @@
 package com.example.misteryshopper.utils.camera;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -17,18 +26,23 @@ import androidx.core.content.FileProvider;
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class PictureHandler {
+    private static final String SHOPPER = "Shopper" ;
+    private static final String STORE = "Store" ;
     private static String imageFilePath;
     private static  Uri imageUri ;
     private static DBHelper mDBHelper = FirebaseDBHelper.getInstance();
-    private static final int REQUEST_IMAGE_CAPTURE = 1 ;
+    public static final int REQUEST_IMAGE_CAPTURE = 1 ;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static void getPicture(Activity context){
@@ -50,14 +64,24 @@ public class PictureHandler {
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static void uploadImage(String id, ImageView view, Context context){
-        mDBHelper.addImageToUserById(id, imageUri, context, new DBHelper.DataStatus() {
-            @Override
-            public void dataIsLoaded(List<?> obj, List<String> keys) {
-                Toast.makeText(context,context.getString(R.string.loading_success),Toast.LENGTH_LONG).show();
-            }
-        });
-        view.setImageURI(imageUri);
+    public static void uploadImage(String id, ImageView view,String flag, Context context){
+        if(flag.equals(SHOPPER)) {
+            mDBHelper.addImageToUserById(id, imageUri, context, new DBHelper.DataStatus() {
+                @Override
+                public void dataIsLoaded(List<?> obj, List<String> keys) {
+                    Toast.makeText(context, context.getString(R.string.loading_success), Toast.LENGTH_LONG).show();
+                }
+            });
+            if (view != null)
+                Picasso.get().load(imageUri).fit().transform(new CircleTransform(true)).into(view);
+        }else if(flag.equals(STORE)){
+            mDBHelper.addImageToStoreById(id, imageUri, context, new DBHelper.DataStatus() {
+                @Override
+                public void dataIsLoaded(List<?> obj, List<String> keys) {
+                    Toast.makeText(context, context.getString(R.string.loading_success), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
 
@@ -77,7 +101,7 @@ public class PictureHandler {
 
         imageFilePath = image.getAbsolutePath();
         return image;
+    }
 
 
-}
 }

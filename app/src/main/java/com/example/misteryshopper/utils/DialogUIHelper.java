@@ -2,6 +2,7 @@ package com.example.misteryshopper.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,16 +13,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.activity.RegisterEmployerActivity;
 import com.example.misteryshopper.activity.RegisterShopperActivity;
+import com.example.misteryshopper.activity.StoreListActivity;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.example.misteryshopper.models.EmployerModel;
 import com.example.misteryshopper.models.HiringModel;
 import com.example.misteryshopper.models.StoreModel;
+import com.example.misteryshopper.utils.camera.PictureHandler;
 import com.example.misteryshopper.utils.notification.MessageCreationService;
 
 import java.util.List;
@@ -69,16 +73,30 @@ public class DialogUIHelper {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.dialog_add_shop, null);
+        View dialogView = inflater.inflate(R.layout.dialog_add_store, null);
         AlertDialog dialog = builder.create();
         dialog.setView(dialogView);
         EditText idShop = dialogView.findViewById(R.id.id_store_add);
         EditText manager = dialogView.findViewById(R.id.manager_name_store_add);
         EditText city = dialogView.findViewById(R.id.city_store_add);
         EditText address = dialogView.findViewById(R.id.address_store_add);
+        Button addImage = dialogView.findViewById(R.id.image_add_dialog);
         Button btnAdd = dialogView.findViewById(R.id.button_store_add);
         Button btnCancel = dialogView.findViewById(R.id.button_store_cancel);
+
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                StoreListActivity activity = (StoreListActivity) context;
+                PictureHandler.getPicture(activity);
+                Intent idintent = new Intent(context.getApplicationContext(),StoreListActivity.class);
+                idintent.putExtra("store_id",model.getIdStore());
+                context.startActivity(idintent);
+            }
+        });
         btnCancel.setOnClickListener(onClick->dialog.dismiss());
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

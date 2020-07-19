@@ -104,10 +104,12 @@ public class ShopperModel extends User implements Serializable {
                 ", address='" + address + '\'' +
                 ", city='" + city + '\'' +
                 ", cf='" + cf + '\'' +
+                ", imageUri='" + imageUri + '\'' +
                 ", available=" + available +
                 ", email='" + email + '\'' +
                 ", id='" + id + '\'' +
                 ", role='" + role + '\'' +
+                ", token='" + token + '\'' +
                 '}';
     }
 }

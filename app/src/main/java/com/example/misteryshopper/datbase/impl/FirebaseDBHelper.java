@@ -330,6 +330,29 @@ public class FirebaseDBHelper implements DBHelper {
     }
 
     @Override
+    public void addImageToStoreById(String id,Uri imageUri, Context context, DataStatus status) {
+        mStorage.getReference("uploads").child(System.currentTimeMillis() + "."
+                + getFileExtension(imageUri, context)).putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                mDatabase.getReference(STORE).child(id).child("imageUri").setValue(uri.toString());
+                                status.dataIsLoaded(null,null);
+                            }
+                        });
+                    }
+                });
+    }
+
+    @Override
+    public String getIdCurrentUser() {
+        return FirebaseAuth.getInstance().getUid();
+    }
+
+    @Override
     public void updateUsers(User model, String UId, Context context, DataStatus status) {
         mReference = mDatabase.getReference(USER);
         mReference.child(UId).setValue(model).addOnSuccessListener(aVoid ->

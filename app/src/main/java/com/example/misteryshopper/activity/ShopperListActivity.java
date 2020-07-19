@@ -79,10 +79,11 @@ public class ShopperListActivity extends AppCompatActivity implements RecyclerVi
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.log_out:
-                mDbHelper.signOut(this);
-                startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                finish();
+                    Intent backIntent = new Intent(this,StoreListActivity.class);
+                    backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(backIntent);
                 break;
+
         }
         return super.onOptionsItemSelected(item);
     }

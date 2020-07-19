@@ -29,6 +29,8 @@ public interface DBHelper {
 
     public void  getUserById(String UId,DataStatus status);
 
+    public String getIdCurrentUser();
+
     public void getRole(String uId,DataStatus status);
 
     public void readStoreOfSpecificUser(String UId, DataStatus status);
@@ -52,6 +54,8 @@ public interface DBHelper {
     void setHireDone(String id);
 
     void addImageToUserById(String id, Uri imageUri,Context context, DataStatus status);
+
+    void addImageToStoreById(String id,Uri imageUri,Context context, DataStatus status);
 
 
     public interface DataStatus {

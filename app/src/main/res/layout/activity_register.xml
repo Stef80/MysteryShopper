@@ -200,6 +200,20 @@
                 />
         </LinearLayout>
 
+    <Button
+        android:id="@+id/image_add_label"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:clickable="true"
+       android:background="@color/design_default_color_background"
+        android:text="@string/add_image"
+        android:textColor="@color/labelAndText"
+        android:textSize="24dp"
+        android:textStyle="bold" />
+
+
         <Button
             android:id="@+id/buttonRegister"
             android:layout_width="match_parent"

@@ -18,15 +18,19 @@
         <include
             android:id="@+id/toolbar_profile"
             layout="@layout/toolbar" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/toolbar_shape_background"
+            android:layout_weight="1.5">
 
         <ImageView
             android:id="@+id/profile_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="30dp"
-            android:background="@drawable/toolbar_shape_background"
-            android:layout_weight="1.5"/>
-
+            android:padding="20dp"
+            />
+        </RelativeLayout>
         <LinearLayout
             android:id="@+id/profile_layout"
             android:layout_width="match_parent"

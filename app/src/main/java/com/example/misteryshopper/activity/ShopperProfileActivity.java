@@ -20,12 +20,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
+
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.annotation.GlideModule;
+
 import com.example.misteryshopper.MainActivity;
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.datbase.DBHelper;
@@ -33,10 +32,10 @@ import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.example.misteryshopper.models.ShopperModel;
 import com.example.misteryshopper.utils.MyPagerAdapter;
 import com.example.misteryshopper.utils.SharedPrefConfig;
+import com.example.misteryshopper.utils.camera.CircleTransform;
 import com.example.misteryshopper.utils.camera.PictureHandler;
+import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.IOException;
 
 public class ShopperProfileActivity extends AppCompatActivity {
 
@@ -56,9 +55,10 @@ public class ShopperProfileActivity extends AppCompatActivity {
 
     private ShopperModel shopperModel;
     private SharedPrefConfig config;
-    private Uri mImageUri;
+    private String userMail;
+    private String mail;
     private final String EMAIL = "email";
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+
 
 
     @Override
@@ -83,8 +83,8 @@ public class ShopperProfileActivity extends AppCompatActivity {
         email = findViewById(R.id.profile_email);
         imgProfile = findViewById(R.id.profile_image);
 
-            String userMail = config.readLoggedUser().getEmail();
-            String mail = getIntent().getStringExtra(EMAIL);
+             userMail = config.readLoggedUser().getEmail();
+             mail = getIntent().getStringExtra(EMAIL);
         if(mail !=null) {
                 if (!userMail.equals(mail)) {
                     mDBHelper.getShopperByMail(mail, (shopperList, keys) -> {
@@ -99,8 +99,7 @@ public class ShopperProfileActivity extends AppCompatActivity {
                             email.setText(shopperModel.getEmail());
                             String imgUrl = shopperModel.getImageUri();
                             if(!TextUtils.isEmpty(imgUrl))
-                                imgProfile.setImageURI(Uri.parse(imgUrl));
-
+                                Picasso.get().load(imgUrl).fit().transform(new CircleTransform()).into(imgProfile);
                         }
                     });
                 } else {
@@ -115,7 +114,7 @@ public class ShopperProfileActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        imgProfile.setImageURI(Uri.parse(imgUrl));
+                        Picasso.get().load(imgUrl).fit().transform(new CircleTransform()).into(imgProfile);
                     }
                     pager.setVisibility(View.VISIBLE);
                     layout.setVisibility(View.GONE);
@@ -130,8 +129,8 @@ public class ShopperProfileActivity extends AppCompatActivity {
             @Override
             protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 super.onActivityResult(requestCode, resultCode, data);
-                if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-                    PictureHandler.uploadImage(shopperModel.getId(),imgProfile,getApplicationContext());
+                if (requestCode ==PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && shopperModel.getImageUri() == null) {
+                    PictureHandler.uploadImage(shopperModel.getId(),imgProfile,"Shopper",getApplicationContext());
                 }
             }
 
@@ -149,11 +148,16 @@ public class ShopperProfileActivity extends AppCompatActivity {
         public boolean onOptionsItemSelected (@NonNull MenuItem item){
             switch (item.getItemId()) {
                 case R.id.item_add:
-                    findViewById(R.id.item_add).setVisibility(View.GONE);
                     break;
                 case R.id.log_out:
-                    mDBHelper.signOut(this);
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    if(userMail.equals(mail)) {
+                        mDBHelper.signOut(this);
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }else{
+                        Intent backIntent = new Intent(this,ShopperListActivity.class);
+                        backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(backIntent);
+                    }
                     break;
             }
             return super.onOptionsItemSelected(item);
