@@ -38,6 +38,16 @@ public class SharedPrefConfig {
 
     }
 
+    public void writePrefString(String key , String data){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(key,data);
+        editor.commit();
+    }
+
+    public String readPrefString(String key){
+       return   preferences.getString(key, "");
+    }
+
     private String getJSON(User usr) {
         return g.toJson(usr);
     }

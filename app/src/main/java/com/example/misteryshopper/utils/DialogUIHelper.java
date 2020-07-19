@@ -33,9 +33,10 @@ import java.util.List;
 public class DialogUIHelper {
 
     private static DBHelper mDBHelper = FirebaseDBHelper.getInstance();
-
+    private static SharedPrefConfig sharedPref;
 
     public static void createRegistationDialog(Context context) {
+        sharedPref = new SharedPrefConfig(context);
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.dialog_main, null);
@@ -70,7 +71,7 @@ public class DialogUIHelper {
 
 
     public static void createStoreDialog(final StoreModel model, Context context) {
-
+           sharedPref = new SharedPrefConfig(context);
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.dialog_add_store, null);
@@ -88,11 +89,14 @@ public class DialogUIHelper {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                StoreListActivity activity = (StoreListActivity) context;
-                PictureHandler.getPicture(activity);
-                Intent idintent = new Intent(context.getApplicationContext(),StoreListActivity.class);
-                idintent.putExtra("store_id",model.getIdStore());
-                context.startActivity(idintent);
+                String storeId = idShop.getText().toString();
+                if(TextUtils.isEmpty(storeId))
+                    idShop.setError(context.getString(R.string.field_required));
+                else {
+                    sharedPref.writePrefString("store_id", storeId);
+                    StoreListActivity activity = (StoreListActivity) context;
+                    PictureHandler.getPicture(activity);
+                }
             }
         });
         btnCancel.setOnClickListener(onClick->dialog.dismiss());
@@ -112,12 +116,13 @@ public class DialogUIHelper {
                     city.setError(context.getString(R.string.field_required));
                 if(TextUtils.isEmpty(adr))
                     address.setError(context.getString(R.string.field_required));
+                EmployerModel user = (EmployerModel) sharedPref.readLoggedUser();
                 model.setIdStore(id);
-                model.seteName(((EmployerModel)new SharedPrefConfig(context).readLoggedUser()).getEmName());
+                model.seteName(user.getEmName());
                 model.setManager(manager.getText().toString());
                 model.setCity(city.getText().toString());
                 model.setAddress(address.getText().toString());
-                EmployerModel user = (EmployerModel) new SharedPrefConfig(context).readLoggedUser();
+
                 Log.i("USERINDIALOG", user.toString());
                 model.setIdEmployer(user.getId());
              if(!(TextUtils.isEmpty(id) && TextUtils.isEmpty(managerStr) && TextUtils.isEmpty(cityStr) && TextUtils.isEmpty(adr))) {

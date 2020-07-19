@@ -76,8 +76,7 @@ public class StoreListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Intent idIntent = getIntent();
-            String idStore = idIntent.getStringExtra("store_id");
+          String idStore = new SharedPrefConfig(getApplicationContext()).readPrefString("store_id");
             PictureHandler.uploadImage(idStore,null,"Store",getApplicationContext());
         }
     }
