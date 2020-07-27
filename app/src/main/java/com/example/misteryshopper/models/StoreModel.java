@@ -71,4 +71,17 @@ public class StoreModel implements Serializable {
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
     }
+
+    @Override
+    public String toString() {
+        return "StoreModel{" +
+                "idStore='" + idStore + '\'' +
+                ", idEmployer='" + idEmployer + '\'' +
+                ", eName='" + eName + '\'' +
+                ", manager='" + manager + '\'' +
+                ", city='" + city + '\'' +
+                ", address='" + address + '\'' +
+                ", imageUri='" + imageUri + '\'' +
+                '}';
+    }
 }

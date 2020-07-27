@@ -13,10 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
+import com.example.misteryshopper.models.HiringModel;
 import com.example.misteryshopper.models.StoreModel;
 import com.example.misteryshopper.utils.RecyclerViewConfig;
 import com.example.misteryshopper.utils.SharedPrefConfig;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,7 +78,8 @@ public class ListHiringFragment extends Fragment {
                 if(obj.isEmpty()) {
                     listEmpty.setVisibility(View.VISIBLE);
                 }else{
-                    new RecyclerViewConfig(null).setConfigList(recyclerView, container.getContext(), (List<StoreModel>) obj,
+                    Collections.sort(((List<HiringModel>)obj));
+                    new RecyclerViewConfig(null).setConfigList(recyclerView, container.getContext(), obj,
                             keys, null);
                     listEmpty.setVisibility(View.GONE);
                 }

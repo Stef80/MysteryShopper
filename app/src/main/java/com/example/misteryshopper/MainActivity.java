@@ -18,6 +18,7 @@ import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.example.misteryshopper.models.User;
 import com.example.misteryshopper.utils.DialogUIHelper;
 import com.example.misteryshopper.utils.SharedPrefConfig;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.List;
 
@@ -63,7 +64,14 @@ public class MainActivity extends AppCompatActivity {
                     mDbHelper.login(user, passwordStr, MainActivity.this, new DBHelper.DataStatus() {
                         @Override
                         public void dataIsLoaded(List<?> obj, List<String> keys) {
-                            mDbHelper.addTokenToUser((User) obj.get(0), MainActivity.this);
+                            mDbHelper.addTokenToUser((User) obj.get(0), MainActivity.this, new DBHelper.DataStatus() {
+                                @Override
+                                public void dataIsLoaded(List<?> obj, List<String> keys) {
+                                    String token = (String) obj.get(0);
+                                    FirebaseMessaging.getInstance().subscribeToTopic(token)
+                                            .addOnCompleteListener(x -> Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG));
+                                }
+                            });
                             sharedPrefConfig.writeLoggedUser((User) obj.get(0));
                             goByRole(((User)obj.get(0)).getRole());
                         }

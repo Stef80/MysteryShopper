@@ -99,7 +99,7 @@ public class ShopperProfileActivity extends AppCompatActivity {
                             email.setText(shopperModel.getEmail());
                             String imgUrl = shopperModel.getImageUri();
                             if(!TextUtils.isEmpty(imgUrl))
-                                Picasso.get().load(imgUrl).fit().transform(new CircleTransform()).into(imgProfile);
+                                Picasso.get().load(imgUrl).transform(new CircleTransform()).into(imgProfile);
                         }
                     });
                 } else {
@@ -114,7 +114,7 @@ public class ShopperProfileActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Picasso.get().load(imgUrl).fit().transform(new CircleTransform()).into(imgProfile);
+                        Picasso.get().load(imgUrl).transform(new CircleTransform()).into(imgProfile);
                     }
                     pager.setVisibility(View.VISIBLE);
                     layout.setVisibility(View.GONE);

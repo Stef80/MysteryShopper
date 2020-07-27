@@ -22,6 +22,7 @@
         <activity android:name=".activity.RegisterEmployerActivity" />
         <activity android:name=".activity.ShopperListActivity" />
         <activity android:name=".activity.RegisterShopperActivity" />
+        <activity android:name=".activity.DialogActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,6 +53,11 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
+        <receiver android:name=".utils.notification.NotificationReciver"/>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

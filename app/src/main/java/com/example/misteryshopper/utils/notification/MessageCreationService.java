@@ -22,7 +22,6 @@ import static android.content.ContentValues.TAG;
 
 public class MessageCreationService {
 
-    private static final String SERVER_KEY = "AAAAJB3_Ass:APA91bGlQIvYUJHaFKCTcxX8ILKpBNUERP67-kimvzgLXIvwVNQHOrSCIB_CRdJuDa2-V12K_40uRbvrWMlFuuATm6I6I2GyZug0MvhAs3KK-_GFAktIj_rkZC1IFzA6EiJu5C-qkzKL";
     private static final String CONTENT_TYPE ="application/json";
     private static final String FCM_API = "https://fcm.googleapis.com/fcm/send";
 
@@ -49,7 +48,7 @@ public class MessageCreationService {
                 body.put("fee", fee);
                 body.put("eName", eName);
             }
-            notification.put("notification",body);
+         //   notification.put("notification",body);
             notification.put("data",body);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -78,7 +77,7 @@ public class MessageCreationService {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                Map<String,String> params = new HashMap<>();
-                params.put("Authorization","key="+ SERVER_KEY);
+                params.put("Authorization","key="+ context.getString(R.string.notification_server_key));
                 params.put("Content-Type",CONTENT_TYPE);
                Log.i("SERVICE", params.toString());
                return params;

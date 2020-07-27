@@ -84,6 +84,9 @@ public class PictureHandler {
         }
     }
 
+    public static String getImageUri(){
+        return imageUri.toString();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static File  createImageFile(Context context) throws IOException {

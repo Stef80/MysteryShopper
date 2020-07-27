@@ -230,14 +230,21 @@ public class FirebaseDBHelper implements DBHelper {
 
 
     @Override
-    public void addTokenToUser(User user, Context context) {
+    public void addTokenToUser(User user, Context context, DataStatus status) {
         mFirebaseId.getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
             @Override
             public void onComplete(@NonNull Task<InstanceIdResult> task) {
                 if (task.isSuccessful()) {
                     String token = task.getResult().getToken();
                     Log.i("TOKEN", token);
-                    mDatabase.getReference(USER).child(user.getId()).child("token").setValue(token);
+                    mDatabase.getReference(USER).child(user.getId()).child("token").setValue(token).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            List<String> tokenList = new ArrayList<>();
+                              tokenList.add(token);
+                            status.dataIsLoaded(tokenList,null);
+                        }
+                    });
                 }
             }
         });
@@ -339,7 +346,9 @@ public class FirebaseDBHelper implements DBHelper {
                         taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                mDatabase.getReference(STORE).child(id).child("imageUri").setValue(uri.toString());
+                                String imageUri = uri.toString();
+                                mDatabase.getReference(STORE).child(id).child("imageUri").setValue(imageUri);
+                                new SharedPrefConfig(context).writePrefString("imageUri",imageUri);
                                 status.dataIsLoaded(null,null);
                             }
                         });

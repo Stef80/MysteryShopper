@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_notification_response">
 
     <RelativeLayout
         android:id="@+id/icon_container"
@@ -36,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-            android:text="@string/hering_request"/>
+            android:text="@string/hiring_request"/>
 
 
         <LinearLayout
@@ -53,18 +54,19 @@
                 android:textAppearance="@style/TextAppearance.Compat.Notification"/>
 
             <TextView
-                android:id="@+id/response_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="@string/notification_has"
-                android:textAppearance="@style/TextAppearance.Compat.Notification" />
-
-            <TextView
                 android:id="@+id/notification_response"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:textAppearance="@style/TextAppearance.Compat.Notification"/>
+
+            <TextView
+                android:id="@+id/response_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notification_request"
+                android:textAppearance="@style/TextAppearance.Compat.Notification" />
+
         </LinearLayout>
 
     </LinearLayout>

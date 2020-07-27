@@ -12,6 +12,7 @@ import android.text.format.DateUtils;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.activity.MyApplication;
@@ -21,7 +22,7 @@ public class NotificationHandler {
 
 
     public static final int NOTIFICATION_ID = 0;
-    private static NotificationManager notificationManager;
+    private static NotificationManagerCompat notificationManager;
 
    public static void displayNotificationShopper(Context context, String title, String place, String when, String fee, String eName, String id,String hId,String storeid) {
        RemoteViews collapsedView = new RemoteViews(context.getPackageName(),R.layout.notification_shopper_layout);
@@ -76,10 +77,18 @@ public class NotificationHandler {
          customView.setTextViewText(R.id.notification_response,outcome);
          customView.setTextViewText(R.id.timestamp_employer,DateUtils.formatDateTime(context, System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME));
 
+           Intent intent = new Intent(context,NotificationReciver.class);
+           intent.putExtra("name", sName);
+           intent.putExtra("outcome", outcome);
+           intent.setAction("showmessage");
+           PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+          //  customView.setIntent(R.id.layout_notification_response,"open_builder",intent);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MyApplication.PRIMARY_CHANNEL_ID)
                 .setSmallIcon(R.drawable.i_notifiation)
                 .setCustomContentView(customView)
                 .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
         notificationManager.notify(NOTIFICATION_ID,builder.build());
     }
@@ -99,8 +108,8 @@ public class NotificationHandler {
            notificationChannel.enableLights(true);
            notificationChannel.setLightColor(Color.RED);
            notificationChannel.enableVibration(true);
-           notificationChannel.setDescription("Notification from Mascot");
-           notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+           notificationChannel.setDescription("Notification from Mystery Shopper");
+           notificationManager = NotificationManagerCompat.from(context);
            notificationManager.createNotificationChannel(notificationChannel);
        }
     }
@@ -108,11 +117,5 @@ public class NotificationHandler {
 
 
 
-    public static class NotificationReciver extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
-    }
 }

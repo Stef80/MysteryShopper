@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mistery Shopper</string>
+    <string name="app_name">Mystery Shopper</string>
     <string name="login">Login</string>
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Email</string>
@@ -14,13 +14,13 @@
     <string name="registration_failed">regitration failed</string>
     <string name="email_not_inserted">e-mail not inserted \nplese insert a valid mail</string>
     <string name="no_item_to_show">"List is empty "</string>
-    <string name="id_shop_label">ID SHOP</string>
+    <string name="id_store_label">id store</string>
     <string name="search_for_hire">search for hire</string>
-    <string name="search">SEARCH</string>
-    <string name="manager_label">MANAGER</string>
-    <string name="city">CITY</string>
-    <string name="address">ADDRESS</string>
-    <string name="add">ADD</string>
+    <string name="search">search</string>
+    <string name="manager_label">manager</string>
+    <string name="city">city</string>
+    <string name="address">address</string>
+    <string name="add">add</string>
     <string name="shop_added">"shop added "</string>
     <string name="login_success">login success</string>
     <string name="shop_not_added">shop didn\'t add , plz try again</string>
@@ -30,9 +30,9 @@
     <string name="register_as_shopper">Register as shopper</string>
     <string name="show_shoppers">shoppers available</string>
     <string name="user_updated">user updated</string>
-    <string name="hire">HIRE</string>
+    <string name="hire">hire</string>
     <string name="add_fee">fee</string>
-    <string name="hering_request">there is an hering request for you</string>
+    <string name="hiring_request">there is an hiring request for you</string>
     <string name="shoppers">Shopper</string>
     <string name="place">Where :</string>
     <string name="when">When :</string>
@@ -54,4 +54,8 @@
     <string name="done">done</string>
     <string name="loading_success">loading success</string>
     <string name="add_image">add image</string>
+    <string name="notification_server_key">AAAAJB3_Ass:APA91bGlQIvYUJHaFKCTcxX8ILKpBNUERP67-kimvzgLXIvwVNQHOrSCIB_CRdJuDa2-V12K_40uRbvrWMlFuuATm6I6I2GyZug0MvhAs3KK-_GFAktIj_rkZC1IFzA6EiJu5C-qkzKL</string>
+    <string name="notification_request">the request</string>
+    <string name="Ok">OK</string>
+    <string name="date_of_engage">date</string>
 </resources>

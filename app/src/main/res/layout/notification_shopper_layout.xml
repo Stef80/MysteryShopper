@@ -11,8 +11,8 @@
 
         <ImageView
             android:id="@+id/big_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:paddingBottom="1dp"
             android:paddingLeft="4dp"
             android:paddingRight="6dp"
@@ -25,7 +25,7 @@
             android:layout_alignBottom="@id/big_icon"
             android:layout_alignRight="@id/big_icon"
             android:src="@drawable/ic_stat_name"/>
-<!--TODO settare dinamicamente l'immagine della bigicon-->
+
     </RelativeLayout>
 
     <LinearLayout
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
-            android:text="@string/hering_request"/>
+            android:text="@string/hiring_request"/>
 
 
         <LinearLayout

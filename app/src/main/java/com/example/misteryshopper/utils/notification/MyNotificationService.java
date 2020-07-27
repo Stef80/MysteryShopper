@@ -23,14 +23,15 @@ public class MyNotificationService extends FirebaseMessagingService {
 
 
         if(remoteMessage != null){
-            String title = remoteMessage.getNotification().getTitle();
+            Map<String, String> body = remoteMessage.getData();
+            String title = body.get("title");
             if(title.equals(getString(R.string.notification_of_employment))) {
-                Map<String, String> body = remoteMessage.getData();
+
                 NotificationHandler.displayNotificationShopper(getApplicationContext(), title, body.get("place"),
                         body.get("when"), body.get("fee"), body.get("eName"),body.get("id"),body.get("hId"),body.get("storeId"));
             }
             if(title.equals(getString(R.string.response_notification))){
-                Map<String,String> body = remoteMessage.getData();
+             //   Map<String,String> body = remoteMessage.getData();
                 NotificationHandler.displayNotificationEmployer(getApplicationContext(),title,body.get("sName"),body.get("outcome"));
             }
         }

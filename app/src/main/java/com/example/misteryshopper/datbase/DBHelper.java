@@ -39,7 +39,7 @@ public interface DBHelper {
 
     public void addStoreOfSpecificId(StoreModel model, DataStatus status);
 
-    void addTokenToUser(User user, Context context);
+    void addTokenToUser(User user, Context context,DataStatus status);
 
     void getTokenByMail(String mail, DataStatus status);
 

@@ -1,11 +1,20 @@
 package com.example.misteryshopper.models;
 
-import java.time.LocalDate;
+import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 
-public class HiringModel {
+import androidx.annotation.RequiresApi;
+
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.Date;
+
+public class HiringModel implements Comparable<HiringModel>{
     String id;
     String idEmployer;
     String employerName;
+    String address;
     String mailShopper;
     String idStore;
     String date;
@@ -16,11 +25,12 @@ public class HiringModel {
     public HiringModel() {
     }
 
-    public HiringModel(String id, String idEmployer, String employerName, String mailShopper, String idStore,String date, double fee) {
+    public HiringModel(String id, String idEmployer, String employerName, String mailShopper,String address, String idStore,String date, double fee) {
         this.id = id;
         this.idEmployer = idEmployer;
         this.mailShopper = mailShopper;
         this.idStore = idStore;
+        this.address = address;
         this.date = date;
         this.fee = fee;
         this.employerName = employerName;
@@ -51,6 +61,14 @@ public class HiringModel {
         this.employerName = employerName;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getMailShopper() {
         return mailShopper;
     }
@@ -75,7 +93,7 @@ public class HiringModel {
         this.fee = fee;
     }
 
-    public String isAccepted() {
+    public String getAccepted() {
         return accepted;
     }
 
@@ -98,4 +116,20 @@ public class HiringModel {
     public void setDate(String date) {
         this.date = date;
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public int compareTo(HiringModel o) {
+        DateFormat format = SimpleDateFormat.getPatternInstance("dd/MM/YYYY");
+        Date date1= null;
+        Date date2 = null;
+        try {
+             date2 = format.parse(o.getDate());
+             date1 = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date1.compareTo(date2);
+    }
+
 }

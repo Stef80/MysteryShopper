@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.misteryshopper.MainActivity;
 import com.example.misteryshopper.R;
 import com.example.misteryshopper.activity.RegisterEmployerActivity;
 import com.example.misteryshopper.activity.RegisterShopperActivity;
@@ -122,7 +123,7 @@ public class DialogUIHelper {
                 model.setManager(manager.getText().toString());
                 model.setCity(city.getText().toString());
                 model.setAddress(address.getText().toString());
-
+                model.setImageUri(new SharedPrefConfig(context).readPrefString("imageUri"));
                 Log.i("USERINDIALOG", user.toString());
                 model.setIdEmployer(user.getId());
              if(!(TextUtils.isEmpty(id) && TextUtils.isEmpty(managerStr) && TextUtils.isEmpty(cityStr) && TextUtils.isEmpty(adr))) {
@@ -181,8 +182,9 @@ public class DialogUIHelper {
                }else {
                    Double feeNumber = Double.valueOf(feeStr);
                    String now =  String.valueOf(System.currentTimeMillis());
+                   String addressStore = address.getText().toString();
                    HiringModel hiringModel = new HiringModel(now + idEmployer, idEmployer,
-                           model.geteName(), mailShopper, model.getIdStore(), dateStr, feeNumber);
+                           model.geteName(), mailShopper,addressStore, model.getIdStore(), dateStr, feeNumber);
                    mDBHelper.addHiringModel(hiringModel, new DBHelper.DataStatus() {
                        @Override
                        public void dataIsLoaded(List<?> obj, List<String> keys) {
@@ -203,5 +205,26 @@ public class DialogUIHelper {
         dialog.show();
     }
 
+
+    public static void buildDialogResponse(Context context, String name,String outcome){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.dialog_response, null);
+        AlertDialog dialog = builder.create();
+
+        dialog.setView(dialogView);
+        TextView nameView = dialogView.findViewById(R.id.dialog_respnse_message_name);
+        TextView outcomeView = dialogView.findViewById(R.id.dialog_response_outcome);
+        Button btnOk = dialogView.findViewById(R.id.dialog_ok_button);
+
+        nameView.setText(name);
+        outcomeView.setText(outcome);
+        btnOk.setOnClickListener(x-> {
+            Intent intent = new Intent(context, MainActivity.class);
+            context.startActivity(intent);
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
 
 }

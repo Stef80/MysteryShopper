@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/hire_name_employer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="xxxxx"
+        android:textAllCaps="true"
+        android:textColor="@color/labelAndText"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/store_id_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/id_store_label"
+                android:textColor="@color/labelAndText" />
+
+            <TextView
+                android:id="@+id/hire_id_store"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="xxxxxxx"
+                android:textColor="@color/labelAndText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hire_address_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:text="@string/address"
+                android:textColor="@color/labelAndText" />
+
+            <TextView
+                android:id="@+id/hire_address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"
+                android:text="xxxxxxx"
+                android:textColor="@color/labelAndText" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hire_fee_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/add_fee"
+                android:textColor="@color/labelAndText" />
+
+            <TextView
+                android:id="@+id/hire_fee"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="xxxxxxx"
+                android:textColor="@color/labelAndText" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hire_date_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/date_of_engage"
+                android:textColor="@color/labelAndText" />
+
+            <TextView
+                android:id="@+id/hire_date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="xxxxxxx"
+                android:textColor="@color/labelAndText" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/hire_confirm_label"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:text="@string/accept"
+        android:textColor="@color/labelAndText"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/hire_button_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_shape"
+            android:enabled="true"
+            android:text="@string/accept"
+            android:textColor="@color/labelAndText"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/hire_button_decline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_shape"
+            android:enabled="true"
+            android:text="@string/decline"
+            android:textColor="@color/labelAndText"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@android:color/darker_gray" />
+
+</LinearLayout>

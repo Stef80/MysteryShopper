@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:theme="@style/Theme.AppCompat"
+    android:padding="10dp">
+
+    <include
+        android:id="@+id/toolbar_response"
+        layout="@layout/toolbar" />
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/response_notification"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:textSize="20dp"
+        android:textColor="@color/labelAndText"
+       />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/dialog_respnse_message_name"
+        android:textColor="@color/labelAndText"
+        android:textSize="16dp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/dialog_response_outcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/labelAndText"
+            android:layout_marginEnd="5dp"
+            android:textSize="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/labelAndText"
+            android:text="@string/notification_request"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/dialog_ok_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_shape"
+        android:textColor="@color/labelAndText"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="@string/Ok"/>
+
+
+</LinearLayout>

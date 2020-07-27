@@ -38,9 +38,6 @@ public class StoreListActivity extends AppCompatActivity {
     private TextView textEmpty;
     String userID;
 
-    public StoreListActivity getReference() {
-        return StoreListActivity.this;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,23 +78,7 @@ public class StoreListActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mDBHelper.readStoreOfSpecificUser(userID, new DBHelper.DataStatus() {
-//            @Override
-//            public void dataIsLoaded(List<?> obj, List<String> keys) {
-//                if(obj.isEmpty()) {
-//                    textEmpty.setVisibility(View.VISIBLE);
-//                    recyclerView.setVisibility(View.GONE);
-//                } else {
-//                    new RecyclerViewConfig(null).setConfigList(recyclerView, StoreListActivity.this, (List<StoreModel>) obj,
-//                            keys, null);
-//                    textEmpty.setVisibility(View.GONE);
-//                }
-//            }
-//        });
- //   }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,19 +90,13 @@ public class StoreListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_add:
-                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
                         StoreModel model = new StoreModel();
                         DialogUIHelper.createStoreDialog(model, StoreListActivity.this);
                         return true;
-                    }
-                });
-                break;
             case R.id.log_out:
                 mDBHelper.signOut(this);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                break;
+               return true;
         }
         return super.onOptionsItemSelected(item);
     }
