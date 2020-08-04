@@ -32,7 +32,8 @@
                 android:text="XXXXXX"
                 android:textAlignment="center"
                 android:textColor="@color/labelAndText"
-                android:textSize="24dp" />
+                android:textSize="24dp"
+                android:textStyle="bold"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -45,13 +46,19 @@
                     android:layout_height="80dp"
                     android:layout_margin="8dp"
                     android:layout_marginStart="20dp"
+                    android:background="@drawable/border_large"
+                    android:padding="5dp"
                     app:srcCompat="@drawable/ic_launcher_foreground" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/image_building"
+                    android:layout_marginStart="74dp"
                     android:layout_marginLeft="10dp"
                     android:layout_toEndOf="@+id/image_building"
+                    android:background="@drawable/border"
+                    android:elevation="10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -60,7 +67,9 @@
                         android:layout_margin="8dp"
                         android:layout_weight="2"
                         android:text="@string/id_store_label"
-                        android:textColor="@color/labelAndText" />
+                        android:textColor="@color/labelAndText"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/id_shop"
@@ -69,7 +78,8 @@
                         android:layout_margin="8dp"
                         android:layout_weight="1"
                         android:text="000000"
-                        android:textColor="@color/labelAndText" />
+                        android:textColor="@color/labelAndText"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </RelativeLayout>
@@ -89,45 +99,71 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="10dp"
                         android:layout_weight="2"
                         android:text="@string/manager_label"
-                        android:textColor="@color/labelAndText" />
+                        android:textColor="@color/labelAndText"
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/shop_manager_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="10dp"
                         android:layout_weight="1"
                         android:text="xxxxxxx"
                         android:textColor="@color/labelAndText" />
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:text="@string/city"
+                        android:textColor="@color/labelAndText"
+                        android:textStyle="bold"/>
                 <TextView
                     android:id="@+id/city_shop_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:text="XXXXXX"
                     android:textColor="@color/labelAndText" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:text="@string/address"
+                        android:textColor="@color/labelAndText"
+                        android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/address_shop_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:text="XXXXXX"
                     android:textColor="@color/labelAndText" />
-
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.9"
+                    android:layout_weight="0.6"
+                    android:padding="10dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -136,8 +172,7 @@
                         android:layout_height="match_parent"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
-                        android:gravity="right"
-                        android:paddingTop="10dp"
+                        android:gravity="center"
                         android:text="@string/search_for_hire"
                         android:textColor="@color/labelAndText" />
 
@@ -146,13 +181,13 @@
                         android:id="@+id/button_serch_shop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_weight="2"
+                        android:layout_weight="1"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="30dp"
                         android:background="@drawable/button_shape"
                         android:text="@string/search"
-                        android:textColor="@color/labelAndText" />
+                        android:textColor="@color/labelAndText"
+                        android:textStyle="bold"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -1,8 +1,6 @@
 package com.example.misteryshopper.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShopperModel extends User implements Serializable {
 
@@ -13,6 +11,7 @@ public class ShopperModel extends User implements Serializable {
     String city;
     String cf;
     String imageUri;
+    double totalAmount;
     boolean available;
 
 
@@ -94,6 +93,14 @@ public class ShopperModel extends User implements Serializable {
 
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     @Override

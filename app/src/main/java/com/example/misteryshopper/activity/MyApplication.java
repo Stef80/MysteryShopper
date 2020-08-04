@@ -27,7 +27,7 @@ public class MyApplication extends Application {
         super.onCreate();
 
         NotificationHandler.createNotificationChannel(this);
-        // isServicesOk();
+        isServicesOk();
 
 
     }
@@ -48,4 +48,6 @@ public class MyApplication extends Application {
         }
        return false;
     }
+
+
 }

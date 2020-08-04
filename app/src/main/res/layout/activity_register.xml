@@ -3,227 +3,137 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/toolbar_shape_background"
     android:orientation="vertical"
     android:padding="60dp"
-    tools:context=".activity.RegisterShopperActivity"
-    >
+    tools:context=".activity.RegisterShopperActivity">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            >
-
-            <TextView
-                android:id="@+id/nameText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Name"
-                android:textSize="18sp"
-                android:textColor="@color/labelAndText"/>
-
-            <EditText
-                android:id="@+id/nameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:padding="10dp"
-                android:textColorHint="@color/labelAndText"
-                android:textColor="@color/labelAndText"
-               />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/surnameTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Surname"
-                android:textSize="16sp"
-                android:textColor="@color/labelAndText" />
-
-            <EditText
-                android:id="@+id/surnameEditTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="textPersonName"
-                android:padding="10dp"
-                android:textColorHint="@color/labelAndText"
-                android:textColor="@color/labelAndText"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/addressTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Address"
-                android:textSize="18sp"
-                android:textColor="@color/labelAndText"/>
-
-            <EditText
-                android:id="@+id/addressEditTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="text"
-                android:padding="10dp"
-                android:textColorHint="@color/labelAndText"
-                android:textColor="@color/labelAndText"
-               
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/cityTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="City"
-                android:textSize="18sp"
-                android:textColor="@color/labelAndText"/>
-
-            <EditText
-                android:id="@+id/cityEditTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="text"
-                android:padding="10dp"
-                android:textColor="@color/labelAndText"
-               
-                />
-        </LinearLayout>
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText" />
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+    <EditText
+        android:id="@+id/surnameEditTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:hint="@string/surname"
+        android:inputType="textPersonName"
+        android:padding="10dp"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText" />
 
-            <TextView
-                android:id="@+id/cf"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="C F "
-                android:textSize="18sp"
-                android:textColor="@color/labelAndText"/>
 
-            <EditText
-                android:id="@+id/cfEditTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="textCapWords"
-                android:padding="10dp"
-                android:textColor="@color/labelAndText"
-               />
-        </LinearLayout>
+    <EditText
+        android:id="@+id/addressEditTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:hint="@string/address"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            >
 
-            <TextView
-                android:id="@+id/emailRegTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="E-mail"
-                android:textSize="18sp"
-                android:textColor="@color/labelAndText"/>
+    <EditText
+        android:id="@+id/cityEditTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:hint="@string/city"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText" />
 
-            <EditText
-                android:id="@+id/emailEditRegTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="text"
-                android:padding="10dp"
 
-                android:textColor="@color/labelAndText"
-               />
-        </LinearLayout>
+    <EditText
+        android:id="@+id/cfEditTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:inputType="textCapWords"
+        android:padding="10dp"
+        android:hint="@string/cf"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/passwordRegTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="password"
-                android:textSize="16sp"
-                android:textColor="@color/labelAndText"/>
+    <EditText
+        android:id="@+id/emailEditRegTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:hint="@string/prompt_email"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText"/>
 
-            <EditText
-                android:id="@+id/passwordEditRegTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="textPassword"
-                android:padding="10dp"
-                android:textColor="@color/labelAndText"
-                />
-        </LinearLayout>
+
+    <EditText
+        android:id="@+id/passwordEditRegTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:hint="@string/prompt_password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText" />
+
 
     <Button
         android:id="@+id/image_add_label"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
+        android:layout_marginVertical="5dp"
         android:layout_weight="1"
+        android:background="@drawable/toolbar_shape_background"
         android:clickable="true"
-       android:background="@color/design_default_color_background"
         android:text="@string/add_image"
         android:textColor="@color/labelAndText"
         android:textSize="24dp"
         android:textStyle="bold" />
 
 
-        <Button
-            android:id="@+id/buttonRegister"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/action_sign_in_short"
-            android:visibility="visible"
-            android:textSize="18sp"
-            android:textColor="@color/labelAndText"
-            android:background="@drawable/button_shape" />
+    <Button
+        android:id="@+id/buttonRegister"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_shape"
+        android:text="@string/action_sign_in_short"
+        android:textColor="@color/labelAndText"
+        android:textSize="18sp"
+        android:visibility="visible" />
 
 
 </LinearLayout>

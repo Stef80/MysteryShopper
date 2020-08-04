@@ -71,6 +71,7 @@ public class ShopperListActivity extends AppCompatActivity implements RecyclerVi
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.my_menu,menu);
         menu.removeItem(R.id.item_add);
+        menu.removeItem(R.id.log_out);
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -78,7 +79,7 @@ public class ShopperListActivity extends AppCompatActivity implements RecyclerVi
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.log_out:
+            case R.id.item_back:
                     Intent backIntent = new Intent(this,StoreListActivity.class);
                     backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(backIntent);

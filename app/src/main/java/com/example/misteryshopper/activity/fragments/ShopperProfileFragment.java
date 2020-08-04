@@ -35,6 +35,7 @@ public class ShopperProfileFragment extends Fragment {
     private TextView email;
 
 
+
     public ShopperProfileFragment() {
         // Required empty public constructor
     }

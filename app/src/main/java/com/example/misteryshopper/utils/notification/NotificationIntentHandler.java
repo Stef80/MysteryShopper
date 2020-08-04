@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.example.misteryshopper.MainActivity;
 import com.example.misteryshopper.R;
+import com.example.misteryshopper.activity.MapsActivity;
 import com.example.misteryshopper.activity.ShopperProfileActivity;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
@@ -39,9 +40,7 @@ public class NotificationIntentHandler extends IntentService {
             @Override
             public void dataIsLoaded(List<?> obj, List<String> keys) {
                 String token = (String) obj.get(0);
-                Log.i("TOKEN NOTIFICATIONH", token);
                 String hId = extras.getString("hId");
-                String storeId = extras.getString("storeId");
                 switch (intent.getAction()) {
                     case "accept":
                         Handler acceptHandler = new Handler(Looper.getMainLooper());
@@ -53,7 +52,7 @@ public class NotificationIntentHandler extends IntentService {
                                     public void dataIsLoaded(List<?> obj, List<String> keys) {
                                         MessageCreationService.buildMessage(getApplicationContext(),
                                                 token, getApplicationContext().getString(R.string.response_notification), name + " " + surname, "accepted");
-                                       NotificationHandler.cancelNotification();
+                                     NotificationHandler.cancelNotification(NotificationHandler.getNotId());
                                     }
                                 });
 
@@ -70,7 +69,7 @@ public class NotificationIntentHandler extends IntentService {
                                     public void dataIsLoaded(List<?> obj, List<String> keys) {
                                         MessageCreationService.buildMessage(getApplicationContext(),
                                                 token,getApplicationContext().getString(R.string.response_notification), name + " " + surname, "declined");
-                                        NotificationHandler.cancelNotification();
+                                        NotificationHandler.cancelNotification(NotificationHandler.getNotId());
                                     }
                                 });
                             }
@@ -81,10 +80,12 @@ public class NotificationIntentHandler extends IntentService {
                         showHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                NotificationHandler.cancelNotification();
-                                Intent go = new Intent(getApplicationContext(), MainActivity.class);
+                                String address = extras.getString("address");
+                                Intent go = new Intent(getApplicationContext(), MapsActivity.class);
                                 go.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                go.putExtra("address",address);
                                 startActivity(go);
+                                NotificationHandler.cancelNotification(NotificationHandler.getNotId());
                             }
                         });
                         break;

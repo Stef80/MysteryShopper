@@ -36,6 +36,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 
 public class RecyclerViewConfig {
 
@@ -65,7 +67,7 @@ public class RecyclerViewConfig {
         private ImageView imgProfile;
         private Button hireBtn;
         private SharedPrefConfig prefConfig;
-        private  StoreModel store;
+        private StoreModel store;
         private OnItemClickListener clickListener;
 
         public ShopperItemView(@NonNull ViewGroup parent, OnItemClickListener clickListener) {
@@ -86,15 +88,19 @@ public class RecyclerViewConfig {
             surname.setText(shopper.getSurname());
             city.setText(shopper.getCity());
             String imageUri = shopper.getImageUri();
-            store = prefConfig.readPrefStore();
-            if(store == null){
-                Log.i("SHOPPER", shopper.getEmail());
-                Bundle extras = intent.getExtras();
-                store = (StoreModel) extras.get("store");
-                prefConfig.writPrefStore(store);
+            //
+            Log.i("SHOPPER", shopper.getEmail());
+            Bundle extras = intent.getExtras();
+            if(extras != null){
+            store = (StoreModel) extras.get("store");
+                Log.i(TAG, "bind: store if: " + store.toString());
+              prefConfig.writPrefStore(store);
+             }else{
+                store = prefConfig.readPrefStore();
+                Log.i(TAG, "bind: store else: " + store.toString());
             }
             if (!TextUtils.isEmpty(imageUri)) {
-                Picasso.get().load(imageUri).resize(80,80).transform(new CircleTransform()).into(imgProfile);
+                Picasso.get().load(imageUri).resize(80, 80).transform(new CircleTransform()).into(imgProfile);
 
             }
             this.key = key;
@@ -109,6 +115,7 @@ public class RecyclerViewConfig {
 
         @Override
         public void onClick(View v) {
+
             clickListener.onItemClick(this.getBindingAdapterPosition());
         }
     }
@@ -137,6 +144,7 @@ public class RecyclerViewConfig {
             imgBuilding = itemView.findViewById(R.id.image_building);
 
             this.clickListener = listener;
+            itemView.setOnClickListener(this);
         }
 
         public void bind(StoreModel storeModel, String key) {
@@ -148,11 +156,11 @@ public class RecyclerViewConfig {
             String img = storeModel.getImageUri();
             if (!TextUtils.isEmpty(img)) {
                 Picasso.get().load(img).fit().into(imgBuilding);
-
             }
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.i(TAG, "onClick: storemodel: " + storeModel.toString());
                     Intent search = new Intent(context, ShopperListActivity.class);
                     search.putExtra("store", storeModel);
                     //todo mettere extras per selezionare quelli piu vicino
@@ -165,6 +173,7 @@ public class RecyclerViewConfig {
 
         @Override
         public void onClick(View v) {
+            Log.i(TAG, "onClick: is clicked");
             clickListener.onItemClick(this.getBindingAdapterPosition());
         }
     }
@@ -181,10 +190,11 @@ public class RecyclerViewConfig {
         private Button btnConfirm;
         private Button btnDecline;
         private DBHelper mDBHelper;
+        private OnItemClickListener clickListener;
         private String key;
 
 
-        public HireItemView(@NonNull ViewGroup parent) {
+        public HireItemView(@NonNull ViewGroup parent, OnItemClickListener clickListener) {
             super(LayoutInflater.from(context).inflate(R.layout.item_hiring_list_fragment, parent, false));
             mDBHelper = FirebaseDBHelper.getInstance();
             eName = itemView.findViewById(R.id.hire_name_employer);
@@ -195,6 +205,9 @@ public class RecyclerViewConfig {
             confirmLabel = itemView.findViewById(R.id.hire_confirm_label);
             btnConfirm = itemView.findViewById(R.id.hire_button_confirm);
             btnDecline = itemView.findViewById(R.id.hire_button_decline);
+
+            this.clickListener = clickListener;
+            itemView.setOnClickListener(this);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
@@ -217,25 +230,22 @@ public class RecyclerViewConfig {
 
             if (confirm == null || confirm.equals("")) {
                 confirmLabel.setText(R.string.waiting);
+                enableButtons();
+
             } else if (confirm.equals("declined")) {
                 confirmLabel.setText(R.string.declined);
-                btnConfirm.setEnabled(false);
-                btnConfirm.setTextColor(Color.WHITE);
-                btnDecline.setEnabled(false);
-                btnDecline.setTextColor(Color.WHITE);
+                disableButton();
+
             } else if (confirm.equals("accepted")) {
                 confirmLabel.setText(R.string.accepted);
-                btnConfirm.setEnabled(false);
-                btnConfirm.setTextColor(Color.WHITE);
-                btnDecline.setEnabled(false);
-                btnDecline.setTextColor(Color.WHITE);
+                disableButton();
             }
 
-               Date nowDate = new Date();
-            if (hireDate.before(nowDate) && !hiringModel.isDone()) {
+            Date nowDate = new Date();
+            if (hireDate.before(nowDate)) {
                 mDBHelper.setHireDone(hiringModel.getId());
                 confirmLabel.setText(R.string.done);
-             
+                disableButton();
             }
 
             btnConfirm.setOnClickListener(new View.OnClickListener() {
@@ -255,10 +265,7 @@ public class RecyclerViewConfig {
                                 Toast.makeText(context, context.getString(R.string.accepted), Toast.LENGTH_SHORT).show();
                             });
                             confirmLabel.setText(context.getString(R.string.accepted));
-                            btnConfirm.setEnabled(false);
-                            btnDecline.setEnabled(false);
-                            btnConfirm.setTextColor(Color.WHITE);
-                            btnDecline.setTextColor(Color.WHITE);
+                            disableButton();
                         }
                     });
 
@@ -278,12 +285,11 @@ public class RecyclerViewConfig {
                             String token = (String) obj.get(0);
                             MessageCreationService.buildMessage(context, token, context.getString(R.string.response_notification),
                                     name + " " + surname, context.getString(R.string.declined));
-                            mDBHelper.setOutcome(hiringModel.getId(), "accepted", (status, key) -> {
+                            mDBHelper.setOutcome(hiringModel.getId(), "declined", (status, key) -> {
                                 Toast.makeText(context, context.getString(R.string.declined), Toast.LENGTH_SHORT).show();
                             });
                             confirmLabel.setText(context.getString(R.string.declined));
-                            btnConfirm.setEnabled(false);
-                            btnDecline.setEnabled(false);
+                            disableButton();
                         }
                     });
 
@@ -294,7 +300,21 @@ public class RecyclerViewConfig {
 
         @Override
         public void onClick(View v) {
+            clickListener.onItemClick(this.getBindingAdapterPosition());
+        }
 
+        private void disableButton() {
+            btnConfirm.setEnabled(false);
+            btnConfirm.setTextColor(Color.WHITE);
+            btnDecline.setEnabled(false);
+            btnDecline.setTextColor(Color.WHITE);
+        }
+
+        private void enableButtons() {
+            btnConfirm.setEnabled(true);
+            btnConfirm.setTextColor(context.getResources().getColor(R.color.labelAndText));
+            btnDecline.setEnabled(true);
+            btnDecline.setTextColor(context.getResources().getColor(R.color.labelAndText));
         }
     }
 
@@ -323,7 +343,7 @@ public class RecyclerViewConfig {
                     holder = new StoreItemView(parent, clickListener);
                     break;
                 case ITEM_HIRE:
-                    holder = new HireItemView(parent);
+                    holder = new HireItemView(parent,clickListener);
             }
             return holder;
         }

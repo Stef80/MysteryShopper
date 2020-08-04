@@ -9,130 +9,144 @@
     <LinearLayout
         android:id="@+id/profile_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
+        android:paddingHorizontal="10dp"
+        android:paddingBottom="15dp"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/profile_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="2"
-        android:gravity="bottom"
-        android:text="COMPLETE NAME:"
-        android:textColor="@color/labelAndText" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/profile_name_fragment"
+            android:id="@+id/profile_label"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="3"
-            android:text="name"
-            android:textColor="@color/labelAndText" />
-
-        <TextView
-            android:id="@+id/profile_surname_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="usrname"
-            android:textColor="@color/labelAndText" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/profile_label_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="2"
-        android:gravity="bottom"
-        android:text="COMPLETE ADDRESS:"
-        android:textColor="@color/labelAndText" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/profile_city_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="3"
-            android:text="city"
-            android:textColor="@color/labelAndText" />
-
-        <TextView
-            android:id="@+id/profile_address_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="address"
-            android:textColor="@color/labelAndText" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/profile_label_email"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="bottom"
-            android:text="E-MAIL:"
+            android:text="@string/complete_name"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:textColor="@color/labelAndText" />
 
-        <TextView
-            android:id="@+id/profile_label_cf"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/profile_name_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:gravity="center_vertical"
+                android:text="@string/name"
+                android:textColor="@color/labelAndText" />
+
+            <TextView
+                android:id="@+id/profile_surname_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical"
+                android:text="@string/surname"
+                android:textColor="@color/labelAndText" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/profile_label_address"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
             android:gravity="bottom"
-            android:text="CF:"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:text="@string/complete_address"
             android:textColor="@color/labelAndText" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/profile_email_fragment"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="Email"
-            android:textColor="@color/labelAndText" />
+            android:layout_weight="2"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/profile_cf_fragment"
+            <TextView
+                android:id="@+id/profile_address_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:text="address"
+                android:textColor="@color/labelAndText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text=", "
+                android:textColor="@color/labelAndText" />
+
+            <TextView
+                android:id="@+id/profile_city_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="city"
+                android:textColor="@color/labelAndText" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="CF"
-            android:textColor="@color/labelAndText" />
-    </LinearLayout>
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/profile_label_email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="@string/prompt_email"
+                android:textColor="@color/labelAndText" />
+
+            <TextView
+                android:id="@+id/profile_label_cf"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="@string/cf"
+                android:textColor="@color/labelAndText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/profile_email_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Email"
+                android:textColor="@color/labelAndText" />
+
+            <TextView
+                android:id="@+id/profile_cf_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="CF"
+                android:textColor="@color/labelAndText" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

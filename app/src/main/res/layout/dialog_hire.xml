@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -9,26 +9,29 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="horizontal">
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/id_store_label"
-            android:textSize="12dp"
             android:id="@+id/store_id_label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_margin="8dp"
-            />
+            android:layout_weight="2.5"
+            android:text="@string/id_store_label"
+            android:textColor="@color/labelAndText"
+            android:textStyle="bold"
+            android:textSize="12dp" />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:text="XXXX"
-          android:textSize="12dp"
-          android:id="@+id/store_id_ref"
-          android:layout_margin="8dp"
-          />
+        <TextView
+            android:id="@+id/store_id_ref"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:text="XXXX"
+            android:textSize="12dp"
+            android:textColor="@color/labelAndText"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,78 +41,92 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:layout_weight="2.5"
             android:text="Address"
-            android:layout_margin="10dp"/>
+            android:textColor="@color/labelAndText"
+            android:textStyle="bold"/>
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="XXXXXX"
             android:id="@+id/address_store_ref"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
             android:inputType="textMultiLine"
-            android:layout_margin="10dp"/>
+            android:text="XXXXXX"
+            android:textColor="@color/labelAndText" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="@string/shoppers"
-        android:textSize="12dp"
-        android:id="@+id/shopper_id_label"
-        android:layout_margin="8dp"
-        />
         <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="XXXX"
-        android:textSize="12dp"
-        android:id="@+id/mail_shopper_ref"
-        android:layout_margin="8dp"
-        />
+            android:id="@+id/shopper_id_label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:layout_weight="2.5"
+            android:text="@string/shoppers"
+            android:textColor="@color/labelAndText"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/mail_shopper_ref"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:text="XXXX"
+            android:textColor="@color/labelAndText"
+
+            android:textSize="12dp" />
+
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="horizontal">
 
-      <EditText
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:layout_margin="8dp"
-          android:gravity="bottom"
-          android:textSize="12sp"
-          android:inputType="numberDecimal"
-          android:hint="@string/add_fee"
-          android:id="@+id/fee_edtxt_ref"/>
+        <EditText
+            android:id="@+id/fee_edtxt_ref"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:hint="@string/add_fee"
+            android:inputType="numberDecimal"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="EURO"
-            android:textSize="12sp"
             android:gravity="bottom"
-            android:layout_margin="10dp"/>
+            android:text="EURO"
+            android:textColor="@color/labelAndText"
+            android:textSize="12sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <DatePicker
+        android:id="@+id/date_picker_ref"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/date_picker_ref"
+        android:layout_weight="4"
         android:calendarTextColor="@color/labelAndText"
-        android:datePickerMode="spinner"
         android:calendarViewShown="false"
-        android:layout_weight="4"/>
+        android:datePickerMode="spinner"
+        android:textColor="@color/labelAndText"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -118,25 +135,25 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/button_hire"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="20dp"
             android:layout_weight="1"
-            android:id="@+id/button_hire"
-            android:layout_margin="15dp"
-            android:text="@string/hire"
             android:background="@drawable/button_shape"
-            />
+            android:text="@string/hire"
+            android:textColor="@color/labelAndText"
+            android:textStyle="bold" />
 
         <Button
+            android:id="@+id/button_cancel_ref"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="20dp"
             android:layout_weight="1"
-            android:id="@+id/button_cancel_ref"
-            android:layout_margin="15dp"
-            android:text="@string/cancel"
             android:background="@drawable/button_shape"
-            />
-
+            android:text="@string/cancel"
+            android:textColor="@color/labelAndText"
+            android:textStyle="bold" />
     </LinearLayout>
-
 </LinearLayout>

@@ -45,7 +45,7 @@ public class CircleTransform implements Transformation {
             float r = size/2f;
             canvas.drawCircle(r, r, r-1, paint);
 
-            // Make the thin border:
+            // Make the thin border_large:
             Paint paintBorder = new Paint();
             paintBorder.setStyle(Paint.Style.STROKE);
             paintBorder.setColor(Color.argb(84,0,0,0));

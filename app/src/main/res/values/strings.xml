@@ -58,4 +58,12 @@
     <string name="notification_request">the request</string>
     <string name="Ok">OK</string>
     <string name="date_of_engage">date</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="cf">C.F.</string>
+    <string name="total">Total</string>
+    <string name="valute">€</string>
+    <string name="complete_name">Complete name</string>
+    <string name="complete_address">Complete address</string>
 </resources>

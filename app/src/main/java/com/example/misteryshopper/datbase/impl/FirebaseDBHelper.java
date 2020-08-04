@@ -357,6 +357,11 @@ public class FirebaseDBHelper implements DBHelper {
     }
 
     @Override
+    public void setTotalForUserId(String id, double totalAmount) {
+        mDatabase.getReference(USER).child(id).child("totalAmount").setValue(totalAmount);
+    }
+
+    @Override
     public String getIdCurrentUser() {
         return FirebaseAuth.getInstance().getUid();
     }

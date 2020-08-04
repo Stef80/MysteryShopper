@@ -193,7 +193,7 @@ public class DialogUIHelper {
                                MessageCreationService.buildMessage(context, (String) obj1.get(0),
                                        context.getString(R.string.notification_of_employment), model.getCity() + "\n" + model.getAddress()
                                        , dateStr, String.valueOf(feeNumber), model.geteName(),
-                                       idEmployer,hiringModel.getId(),model.getIdStore());
+                                       idEmployer,hiringModel.getId(),model.getImageUri());
                            });
                            dialog.dismiss();
                        }

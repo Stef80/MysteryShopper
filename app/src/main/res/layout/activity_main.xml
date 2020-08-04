@@ -5,11 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="40dp"
-    android:paddingRight="40dp"
+   android:paddingHorizontal="40dp"
+    android:paddingVertical="20dp"
     android:gravity="center"
     android:background="@drawable/toolbar_shape_background"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@mipmap/mistery_icon_round"
+        android:padding="30dp" />
+
     <TextView
         android:id="@+id/wellCometext"
         android:layout_width="match_parent"

@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.misteryshopper.R;
+import com.example.misteryshopper.activity.MapsActivity;
+import com.example.misteryshopper.activity.ShopperProfileActivity;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.example.misteryshopper.models.HiringModel;
@@ -27,14 +29,15 @@ import java.util.List;
  * Use the {@link ListHiringFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ListHiringFragment extends Fragment {
+public class ListHiringFragment extends Fragment implements RecyclerViewConfig.OnItemClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_COLUMN_COUNT = "column-count";
     private DBHelper mDBHelper = FirebaseDBHelper.getInstance();
     private int column = 1;
-
+    private SharedPrefConfig prefConfig;
+    private List<HiringModel> hiringModelList;
 
     public ListHiringFragment() {
         // Required empty public constructor
@@ -60,7 +63,7 @@ public class ListHiringFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             column = getArguments().getInt(ARG_COLUMN_COUNT);
-
+             prefConfig=  new SharedPrefConfig(getContext());
         }
     }
 
@@ -68,24 +71,46 @@ public class ListHiringFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        String mail = new SharedPrefConfig(getContext()).readLoggedUser().getEmail();
+        String mail = prefConfig.readLoggedUser().getEmail();
         View view = inflater.inflate(R.layout.fragment_list_hiring, container, false);
         TextView listEmpty = view.findViewById(R.id.emptyState_hiring_list);
         RecyclerView recyclerView = view.findViewById(R.id.list_hires);
         mDBHelper.getHireByMail(mail, new DBHelper.DataStatus() {
             @Override
             public void dataIsLoaded(List<?> obj, List<String> keys) {
+                double amount = 0.0;
                 if(obj.isEmpty()) {
                     listEmpty.setVisibility(View.VISIBLE);
                 }else{
-                    Collections.sort(((List<HiringModel>)obj));
+                   hiringModelList = (List<HiringModel>)obj;
+                  amount =  setTotalAmount(hiringModelList);
+                    Collections.sort(hiringModelList);
                     new RecyclerViewConfig(null).setConfigList(recyclerView, container.getContext(), obj,
-                            keys, null);
+                            keys, ListHiringFragment.this);
                     listEmpty.setVisibility(View.GONE);
                 }
-
+                mDBHelper.setTotalForUserId(prefConfig.readLoggedUser().getId(), amount);
             }
         });
      return view;
+    }
+
+    public double setTotalAmount(List<HiringModel> modelList){
+        double totalAmount = 0.0;
+        for (HiringModel model:modelList) {
+            if(model.getAccepted() != null) {
+                if (model.getAccepted().equals("accepted")) {
+                    totalAmount += model.getFee();
+                }
+            }
+        }
+      return totalAmount;
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent intent = new Intent(getContext(), MapsActivity.class);
+        intent.putExtra("address",hiringModelList.get(position).getAddress());
+        startActivity(intent);
     }
 }

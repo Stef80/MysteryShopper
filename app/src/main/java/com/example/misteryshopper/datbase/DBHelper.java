@@ -57,6 +57,8 @@ public interface DBHelper {
 
     void addImageToStoreById(String id,Uri imageUri,Context context, DataStatus status);
 
+    void setTotalForUserId(String id, double totalAmount);
+
 
     public interface DataStatus {
         void dataIsLoaded(List<? extends Object> obj, List<String> keys);

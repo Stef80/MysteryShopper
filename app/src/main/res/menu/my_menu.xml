@@ -11,4 +11,9 @@
         android:title="@string/show_shoppers"
         app:showAsAction="always"
         android:icon="@drawable/item_add"/>
+
+    <item android:id="@+id/item_back"
+        android:title="@string/show_shoppers"
+        app:showAsAction="always"
+        android:icon="@drawable/item_back"/>
 </menu>
