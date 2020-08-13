@@ -10,16 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 
 import com.example.misteryshopper.MainActivity;
 import com.example.misteryshopper.R;
@@ -32,14 +31,15 @@ import com.example.misteryshopper.utils.camera.CircleTransform;
 import com.example.misteryshopper.utils.camera.PictureHandler;
 import com.squareup.picasso.Picasso;
 
-import static android.content.ContentValues.TAG;
-
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 
 public class ShopperProfileActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String SHOPPER = "Shopper";
     private DBHelper mDBHelper = FirebaseDBHelper.getInstance();
     private TextView name;
     private TextView surname;
@@ -49,6 +49,7 @@ public class ShopperProfileActivity extends AppCompatActivity {
     private TextView cf;
     private TextView totalAmount;
     private ImageView imgProfile;
+    private ProgressBar bar;
     private Toolbar toolbar;
     private ViewPager pager;
     private LinearLayout layout;
@@ -84,6 +85,7 @@ public class ShopperProfileActivity extends AppCompatActivity {
         city = findViewById(R.id.profile_city);
         email = findViewById(R.id.profile_email);
         totalAmount = findViewById(R.id.profile_total_amount);
+        bar = findViewById(R.id.progress_bar_profile);
         imgProfile = findViewById(R.id.profile_image);
 
         userMail = config.readLoggedUser().getEmail();
@@ -103,7 +105,9 @@ public class ShopperProfileActivity extends AppCompatActivity {
                         email.setText(shopperModel.getEmail());
                         String imgUrl = shopperModel.getImageUri();
                         if (!TextUtils.isEmpty(imgUrl))
+                            imgProfile.setVisibility(View.VISIBLE);
                             Picasso.get().load(imgUrl).transform(new CircleTransform()).into(imgProfile);
+                            bar.setVisibility(View.GONE);
                     }
                 });
             } else {
@@ -118,8 +122,9 @@ public class ShopperProfileActivity extends AppCompatActivity {
                         }
                     });
                 } else {
+                    imgProfile.setVisibility(View.VISIBLE);
                     Picasso.get().load(imgUrl).transform(new CircleTransform()).into(imgProfile);
-
+                    bar.setVisibility(View.GONE);
                 }
 
                 mDBHelper.getShopperByMail(userMail, new DBHelper.DataStatus() {
@@ -145,7 +150,7 @@ public class ShopperProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && shopperModel.getImageUri() == null) {
-            PictureHandler.uploadImage(shopperModel.getId(), imgProfile, "Shopper", getApplicationContext());
+            PictureHandler.uploadImage(shopperModel.getId(), imgProfile, bar, SHOPPER, getApplicationContext());
         }
     }
 

@@ -40,6 +40,12 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
+                <ProgressBar
+                    android:id="@+id/prgress_bar_item_store"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:visibility="gone"/>
+
                 <ImageView
                     android:id="@+id/image_building"
                     android:layout_width="80dp"

@@ -12,12 +12,15 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -27,6 +30,7 @@ import com.example.misteryshopper.R;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -64,7 +68,7 @@ public class PictureHandler {
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static void uploadImage(String id, ImageView view,String flag, Context context){
+    public static void uploadImage(String id, ImageView view, ProgressBar bar, String flag, Context context){
         if(flag.equals(SHOPPER)) {
             mDBHelper.addImageToUserById(id, imageUri, context, new DBHelper.DataStatus() {
                 @Override
@@ -73,7 +77,24 @@ public class PictureHandler {
                 }
             });
             if (view != null)
-                Picasso.get().load(imageUri).fit().transform(new CircleTransform(true)).into(view);
+                Picasso.get().load(imageUri).fit().transform(new CircleTransform(true)).into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        view.setVisibility(View.VISIBLE);
+                        view.setImageBitmap(bitmap);
+                        bar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                         Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                          bar.setVisibility(View.VISIBLE);
+                    }
+                });
         }else if(flag.equals(STORE)){
             mDBHelper.addImageToStoreById(id, imageUri, context, new DBHelper.DataStatus() {
                 @Override
@@ -84,8 +105,9 @@ public class PictureHandler {
         }
     }
 
-    public static String getImageUri(){
-        return imageUri.toString();
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static void uploaImageWithoutShow(String id, String flag , Context context){
+        uploadImage(id,null,null,flag,context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

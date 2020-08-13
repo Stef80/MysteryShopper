@@ -66,4 +66,6 @@
     <string name="valute">€</string>
     <string name="complete_name">Complete name</string>
     <string name="complete_address">Complete address</string>
+    <string name="category">Category</string>
+    <string name="iva">IVA</string>
 </resources>

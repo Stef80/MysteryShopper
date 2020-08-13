@@ -6,142 +6,78 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="60dp"
+    android:background="@drawable/toolbar_shape_background"
     tools:context=".activity.RegisterEmployerActivity">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+    <EditText
+        android:id="@+id/nameEmployerEditText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText" />
+    <EditText
+        android:id="@+id/categoryEditTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:ems="10"
+        android:hint="@string/category"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText" />
 
-            <TextView
-                android:id="@+id/nameEmployerText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:textSize="18sp"
-                android:textColor="@color/labelAndText"
-                android:text="Name" />
 
-            <EditText
-                android:id="@+id/nameEmployerEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-               
-                android:textColor="@color/labelAndText"
-                android:padding="8dp"
-                android:inputType="text" />
+    <EditText
+        android:id="@+id/pIvaEditTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:ems="10"
+        android:hint="@string/iva"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/categoryTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:textSize="18sp"
-                android:textColor="@color/labelAndText"
-                android:text="Category" />
-
-            <EditText
-                android:id="@+id/categoryEditTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-               
-                android:textColor="@color/labelAndText"
-                android:padding="8dp"
-                android:inputType="textPersonName" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/pIvaTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:textSize="18sp"
-                android:textColor="@color/labelAndText"
-                android:text="IVA" />
-
-            <EditText
-                android:id="@+id/pIvaEditTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-               
-                android:textColor="@color/labelAndText"
-                android:padding="8dp"
-                android:inputType="text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/emEmailRegTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:textSize="18sp"
-                android:textColor="@color/labelAndText"
-                android:text="E-mail" />
 
             <EditText
                 android:id="@+id/emEmailEditRegTxt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
                 android:layout_weight="1"
-                android:ems="10"
-               
+                android:background="@drawable/background_text_shape"
+                android:inputType="textEmailAddress"
+                android:padding="10dp"
+                android:hint="@string/prompt_email"
                 android:textColor="@color/labelAndText"
-                android:padding="8dp"
-                android:inputType="textEmailAddress" />
-        </LinearLayout>
+                android:textColorHint="@color/labelAndText"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/emPasswordTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:textSize="16sp"
-                android:textColor="@color/labelAndText"
-                android:text="Password" />
-
-            <EditText
-                android:id="@+id/emPasswordEditTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPassword"
-               
-                android:textColor="@color/labelAndText"
-                android:padding="8dp" />
-        </LinearLayout>
+    <EditText
+        android:id="@+id/emPasswordEditTxt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/background_text_shape"
+        android:hint="@string/prompt_password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textColor="@color/labelAndText"
+        android:textColorHint="@color/labelAndText" />
 
         <Button
             android:id="@+id/emRegButton"
@@ -150,6 +86,7 @@
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:textSize="24sp"
+            android:textStyle="bold"
             android:background="@drawable/button_shape"
             android:textColor="@color/labelAndText"
             android:text="@string/action_sign_in_short" />

@@ -129,7 +129,12 @@ public class HiringModel implements Comparable<HiringModel>{
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return date1.compareTo(date2);
+        if(date1.before(date2))
+        return 1;
+        else if(date1.equals(date2))
+            return 0;
+        else
+            return -1;
     }
 
 }

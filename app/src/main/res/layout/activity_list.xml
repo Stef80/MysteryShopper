@@ -10,21 +10,31 @@
     <include layout="@layout/toolbar"
         android:id="@+id/toolbar"/>
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/emptyState"
-        android:gravity="center"
-        android:visibility="gone"
-        android:textSize="36dp"
-        android:textColor="@color/labelAndText"
-        android:text="@string/no_item_to_show"/>
+        android:layout_height="match_parent">
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_shopper"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/emptyState"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/no_item_to_show"
+                android:textColor="@color/labelAndText"
+                android:textSize="36dp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_shopper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

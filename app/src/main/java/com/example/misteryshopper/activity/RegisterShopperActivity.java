@@ -1,25 +1,23 @@
 package com.example.misteryshopper.activity;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.misteryshopper.MainActivity;
 import com.example.misteryshopper.R;
-import com.example.misteryshopper.models.ShopperModel;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
-import com.example.misteryshopper.utils.DialogUIHelper;
+import com.example.misteryshopper.models.ShopperModel;
 import com.example.misteryshopper.utils.camera.PictureHandler;
 
 import java.util.List;
@@ -27,16 +25,18 @@ import java.util.List;
 
 public class RegisterShopperActivity extends AppCompatActivity {
 
-
+    private static final String TAG = "ShopperProfileActivity";
     private EditText name;
-   private EditText surname;
-   private EditText address;
-   private EditText city;
-   private EditText cf;
-   private EditText email;
-   private EditText password;
-   private Button imageAdd;
-   private DBHelper mDbHelper = FirebaseDBHelper.getInstance();
+    private EditText surname;
+    private EditText address;
+    private EditText city;
+    private EditText cf;
+    private EditText email;
+    private EditText password;
+    private Button imageAdd;
+    private DBHelper mDbHelper = FirebaseDBHelper.getInstance();
+
+    private String userId;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -75,25 +75,28 @@ public class RegisterShopperActivity extends AppCompatActivity {
                 shopper.setCity(city.getText().toString());
                 String mail = email.getText().toString();
                 String pas = password.getText().toString();
-                if(TextUtils.isEmpty(mail)){
+                if (TextUtils.isEmpty(mail)) {
                     email.setError(getResources().getString(R.string.email_not_inserted));
                 }
-                if(TextUtils.isEmpty(pas)){
+                if (TextUtils.isEmpty(pas)) {
                     password.setError(getResources().getString(R.string.invalid_password));
                 }
-                if(pas.length()<=5){
+                if (pas.length() <= 5) {
                     password.setError(getResources().getString(R.string.invalid_password_lenght));
                 }
                 shopper.setEmail(email.getText().toString());
 
-                 if(!TextUtils.isEmpty(mail)&& !TextUtils.isEmpty(pas))
-                mDbHelper.register(shopper, mail,pas, getApplicationContext(), new FirebaseDBHelper.DataStatus() {
-                    @Override
-                    public void dataIsLoaded(List<?> obj, List<String> keys) {
-                        startActivity(new Intent(RegisterShopperActivity.this, MainActivity.class));
-                        finish();
-                    }
-                });
+                if (!TextUtils.isEmpty(mail) && !TextUtils.isEmpty(pas))
+                    mDbHelper.register(shopper, mail, pas, getApplicationContext(), new FirebaseDBHelper.DataStatus() {
+                        @Override
+                        public void dataIsLoaded(List<?> obj, List<String> keys) {
+                            userId = mDbHelper.getIdCurrentUser();
+                            PictureHandler.uploaImageWithoutShow(userId, "Shopper", getApplicationContext());
+                            startActivity(new Intent(RegisterShopperActivity.this, MainActivity.class));
+                            finish();
+                        }
+                    });
+
             }
         });
 
@@ -103,9 +106,9 @@ public class RegisterShopperActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            String UId = mDbHelper.getIdCurrentUser();
-            PictureHandler.uploadImage(UId,null,"Shopper",getApplicationContext());
+        if (requestCode == PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Log.i(TAG, "run: userId" + userId);
+
         }
 
     }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -77,7 +78,7 @@ public class StoreListActivity extends AppCompatActivity implements RecyclerView
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
           String idStore = new SharedPrefConfig(getApplicationContext()).readPrefString("store_id");
-            PictureHandler.uploadImage(idStore,null,"Store",getApplicationContext());
+            PictureHandler.uploaImageWithoutShow(idStore,"Store",getApplicationContext());
         }
     }
 
@@ -107,14 +108,7 @@ public class StoreListActivity extends AppCompatActivity implements RecyclerView
 
     @Override
     public void onItemClick(int position) {
-        Log.i(TAG, "onItemClick: cliccked");
-        Intent intent = new Intent(this,MapsActivity.class);
-        intent.putExtra("address",storeModelList.get(position).getCity());
-        startActivity(intent);
+
     }
 
-//    @Override
-//    public void onItemClick(int position) {
-//
-//    }
 }

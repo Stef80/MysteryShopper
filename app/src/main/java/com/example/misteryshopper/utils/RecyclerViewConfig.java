@@ -2,7 +2,9 @@ package com.example.misteryshopper.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ import com.example.misteryshopper.models.StoreModel;
 import com.example.misteryshopper.utils.camera.CircleTransform;
 import com.example.misteryshopper.utils.notification.MessageCreationService;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -65,6 +69,7 @@ public class RecyclerViewConfig {
         private TextView city;
         private String key;
         private ImageView imgProfile;
+        private ProgressBar progressBar;
         private Button hireBtn;
         private SharedPrefConfig prefConfig;
         private StoreModel store;
@@ -77,6 +82,7 @@ public class RecyclerViewConfig {
             city = itemView.findViewById(R.id.cityTxt);
             imgProfile = itemView.findViewById(R.id.imageView);
             hireBtn = itemView.findViewById(R.id.button_confirm);
+            progressBar = itemView.findViewById(R.id.progressBarItem);
             prefConfig = new SharedPrefConfig(context);
             this.clickListener = clickListener;
 
@@ -100,7 +106,23 @@ public class RecyclerViewConfig {
                 Log.i(TAG, "bind: store else: " + store.toString());
             }
             if (!TextUtils.isEmpty(imageUri)) {
-                Picasso.get().load(imageUri).resize(80, 80).transform(new CircleTransform()).into(imgProfile);
+                Picasso.get().load(imageUri).resize(80, 80).transform(new CircleTransform()).into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        imgProfile.setImageBitmap(bitmap);
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                      Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                         progressBar.setVisibility(View.VISIBLE);
+                    }
+                });
 
             }
             this.key = key;
@@ -163,7 +185,6 @@ public class RecyclerViewConfig {
                     Log.i(TAG, "onClick: storemodel: " + storeModel.toString());
                     Intent search = new Intent(context, ShopperListActivity.class);
                     search.putExtra("store", storeModel);
-                    //todo mettere extras per selezionare quelli piu vicino
                     context.startActivity(search);
                 }
             });
