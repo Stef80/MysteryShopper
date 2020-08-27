@@ -113,7 +113,9 @@ public class ShopperProfileActivity extends AppCompatActivity {
             } else {
                 shopperModel = (ShopperModel) config.readLoggedUser();
                 String imgUrl = shopperModel.getImageUri();
-                if (TextUtils.isEmpty(imgUrl) && imgUrl == null) {
+                if (TextUtils.isEmpty(imgUrl) || imgUrl == null) {
+                    bar.setVisibility(View.GONE);
+                    imgProfile.setVisibility(View.VISIBLE);
                     imgProfile.setOnClickListener(new View.OnClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
@@ -127,14 +129,7 @@ public class ShopperProfileActivity extends AppCompatActivity {
                     bar.setVisibility(View.GONE);
                 }
 
-                mDBHelper.getShopperByMail(userMail, new DBHelper.DataStatus() {
-                    @Override
-                    public void dataIsLoaded(List<?> obj, List<String> keys) {
-                        shopperModel = (ShopperModel) obj.get(0);
-                        Log.i(TAG, "dataIsLoaded: getTotalAmount: " + shopperModel.getTotalAmount());
-                        totalAmount.setText(String.valueOf(shopperModel.getTotalAmount()));
-                    }
-                });
+
 
                 pager.setVisibility(View.VISIBLE);
                 layout.setVisibility(View.GONE);
@@ -149,15 +144,22 @@ public class ShopperProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && shopperModel.getImageUri() == null) {
+        if (requestCode == PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             PictureHandler.uploadImage(shopperModel.getId(), imgProfile, bar, SHOPPER, getApplicationContext());
         }
     }
 
     @Override
     protected void onStart() {
+        mDBHelper.getShopperByMail(userMail, new DBHelper.DataStatus() {
+            @Override
+            public void dataIsLoaded(List<?> obj, List<String> keys) {
+                shopperModel = (ShopperModel) obj.get(0);
+                Log.i(TAG, "dataIsLoaded: getTotalAmount: " + shopperModel.getTotalAmount());
+                totalAmount.setText(String.valueOf(shopperModel.getTotalAmount()));
+            }
+        });
         super.onStart();
-
     }
 
     @Override

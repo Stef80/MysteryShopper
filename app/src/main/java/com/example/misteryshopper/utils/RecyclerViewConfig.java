@@ -116,6 +116,7 @@ public class RecyclerViewConfig {
                     @Override
                     public void onBitmapFailed(Exception e, Drawable errorDrawable) {
                       Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
+                      progressBar.setVisibility(View.GONE);
                     }
 
                     @Override

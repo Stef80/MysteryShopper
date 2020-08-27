@@ -77,7 +77,7 @@ public class PictureHandler {
                 }
             });
             if (view != null)
-                Picasso.get().load(imageUri).fit().transform(new CircleTransform(true)).into(new Target() {
+                Picasso.get().load(imageUri).transform(new CircleTransform(true)).into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         view.setVisibility(View.VISIBLE);
@@ -88,6 +88,7 @@ public class PictureHandler {
                     @Override
                     public void onBitmapFailed(Exception e, Drawable errorDrawable) {
                          Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
+                         bar.setVisibility(View.GONE);
                     }
 
                     @Override
