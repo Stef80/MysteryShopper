@@ -13,19 +13,28 @@
 </p>
 
 <p>L'applicazione permetta la registrazione di due tipi di utenti, lo shopper che viene ingaggiato, e l'employer che è una società con vari negozi sparsi per il territorio e che necessita di una valutazione dei servizi offerti dai vari negozi.</p>
-<h3>Registrazione<h3>
+<h3>Registrazione</h3>
 <img src="https://github.com/Stef80/MysteryShopper/blob/master/20200827_175155%5B1%5D.gif" width=150 height=250>
  <p>la registrazione viene effettuata attraverso la compilazione di un apposito form per ciasucn tipo di utenza</p>
  </img>
  <hr>
  <p>Una volta registrato baterà effettuare il login per entrare nella pagina dell'utenza a cui ci si è iscritti</p>
- <span> 
 
- </span>
-
-< div style = "float:left; margin - right:1em;" ><h3>Login come shopper</h3> 
-<img src="https://github.com/Stef80/MysteryShopper/blob/master/20200827_172731%5B1%5D.gif" width=150 height=250/>
-</div>
-< div style = "float:left; margin - right:1em;" ></div> <h3>Login come employer</h3>
- <img src="https://github.com/Stef80/MysteryShopper/blob/master/login_employer%5B1%5D.gif" width=150 height=250/>
-</div>
+<table cellspacing="2" cellpadding="2" width="400" border="0">
+<tbody>
+<tr>
+<td valign="top" width="200">
+ <div>
+  <h3>Login come shopper</h3> 
+  <img src="https://github.com/Stef80/MysteryShopper/blob/master/20200827_172731%5B1%5D.gif" width=150 height=250/>
+ </div>
+</td>
+<td valign="top" width="200">
+ <div>
+  <h3>Login come employer</h3>
+  <img src="https://github.com/Stef80/MysteryShopper/blob/master/login_employer%5B1%5D.gif" width=150 height=250/>
+ </div>
+ </td>
+</tr>
+</tbody>
+</table>
