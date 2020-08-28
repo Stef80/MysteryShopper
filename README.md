@@ -15,12 +15,14 @@ Il progetto fa uso di alcune librerie per interagire con Firebase utilizzando i 
 <p>L'applicazione permetta la registrazione di due tipi di utenti, lo shopper che viene ingaggiato, e l'employer che è una società con vari negozi sparsi per il territorio e che necessita di una valutazione dei servizi offerti dai vari negozi.</p>
 <h3>Registrazione<h3>
 <img src="https://github.com/Stef80/MysteryShopper/blob/master/20200827_175155%5B1%5D.gif" width=150 height=250>
- <p>la registrazione viene effettuata attraverso la compilazione di un apposito form per ciasucn tipo di utenza</p>
+ la registrazione viene effettuata attraverso la compilazione di un apposito form per ciasucn tipo di utenza
+ </img>
+<span>
  <p>Una volta registrato baterà effettuare il login per entrare nella pagina dell'utenza a cui ci si è iscritti</p>
   
-<h3>Login come shopper<h3>
-  
+<h3>Login come shopper<h3></br>
+ 
 <img src="https://github.com/Stef80/MysteryShopper/blob/master/20200827_172731%5B1%5D.gif" width=150 height=250>
 
- <h3>Login come employer</h3>
-
+ <h3>Login come employer</h3></br>
+<span>
