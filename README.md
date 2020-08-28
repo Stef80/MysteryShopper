@@ -18,23 +18,27 @@
  <p>la registrazione viene effettuata attraverso la compilazione di un apposito form per ciasucn tipo di utenza</p>
  </img>
  <hr>
+ <h3>Login<h3>
  <p>Una volta registrato baterà effettuare il login per entrare nella pagina dell'utenza a cui ci si è iscritti</p>
-
 <table cellspacing="2" cellpadding="2" width="400" border="0">
 <tbody>
 <tr>
 <td valign="top" width="200">
  <div>
-  <h3>Login come shopper</h3> 
+  <h4>Login come shopper</h4> 
   <img src="https://github.com/Stef80/MysteryShopper/blob/master/20200827_172731%5B1%5D.gif" width=150 height=250/>
  </div>
 </td>
 <td valign="top" width="200">
  <div>
-  <h3>Login come employer</h3>
+  <h4>Login come employer</h4>
   <img src="https://github.com/Stef80/MysteryShopper/blob/master/login_employer%5B1%5D.gif" width=150 height=250/>
  </div>
  </td>
 </tr>
 </tbody>
 </table>
+</hr>
+<h3>Notifiche<h3>
+ 
+
