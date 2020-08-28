@@ -1,6 +1,6 @@
 # MysteryShopper
 
-Il progetto fa uso di alcune librerie per interagire con Firebase utilizzando i servizi offerti per l'immagazzinamento dei dati, l'autenticazione degli utenti e l'invio di notifiche push tra utenti. Vengono inoltre usate librerie di google maps per la geolocalizzazione.
+<p>Il progetto fa uso di alcune librerie per interagire con Firebase utilizzando i servizi offerti per l'immagazzinamento dei dati, l'autenticazione degli utenti e l'invio di notifiche push tra utenti. Vengono inoltre usate librerie di google maps per la geolocalizzazione.</p>
 
 <h3>le librerie sono :</h3>
 <p>- firebase-database:19.3.1</br>
@@ -20,10 +20,12 @@ Il progetto fa uso di alcune librerie per interagire con Firebase utilizzando i 
  <hr>
  <p>Una volta registrato baterà effettuare il login per entrare nella pagina dell'utenza a cui ci si è iscritti</p>
  <span> 
-<h3>Login come shopper</h3>
-  
-<img src="https://github.com/Stef80/MysteryShopper/blob/master/20200827_172731%5B1%5D.gif" width=150 height=250><img>
- <h3>Login come employer</h3>
- <img src=""
+
  </span>
 
+< div style = "float:left; margin - right:1em;" ><h3>Login come shopper</h3> 
+<img src="https://github.com/Stef80/MysteryShopper/blob/master/20200827_172731%5B1%5D.gif" width=150 height=250/>
+</div>
+< div style = "float:left; margin - right:1em;" ></div> <h3>Login come employer</h3>
+ <img src="https://github.com/Stef80/MysteryShopper/blob/master/login_employer%5B1%5D.gif" width=150 height=250/>
+</div>
