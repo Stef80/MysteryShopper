@@ -118,8 +118,8 @@ public class NotificationHandler {
     }
 
 
-    public static void cancelNotification(int notificationId){
-       notificationManager.cancel(notificationId);
+    public static void cancelNotification(){
+       notificationManager.cancel(getNotId());
     }
 
 

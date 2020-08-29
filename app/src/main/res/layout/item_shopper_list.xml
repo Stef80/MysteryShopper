@@ -65,21 +65,22 @@
                         <TextView
                             android:id="@+id/nameLabel"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="16dp"
                             android:text="TextView"
+                            android:inputType="textMultiLine"
                             android:textColor="@color/labelAndText" />
 
                         <TextView
                             android:id="@+id/surname_label"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="16dp"
-
+                            android:inputType="textMultiLine"
                             android:text="TextView"
                             android:textColor="@color/labelAndText" />
                     </LinearLayout>

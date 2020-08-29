@@ -3,6 +3,7 @@ package com.example.misteryshopper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.misteryshopper.activity.ShopperProfileActivity;
 import com.example.misteryshopper.activity.StoreListActivity;
@@ -21,6 +23,9 @@ import com.example.misteryshopper.utils.SharedPrefConfig;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPrefConfig = new SharedPrefConfig(getApplicationContext());
         if (sharedPrefConfig.readLoggedUser() != null) {
+            Log.i(TAG, "onCreate: logging on installation: sharedPrefConfig.readLoggedUser: " + sharedPrefConfig.readLoggedUser());
             User user = sharedPrefConfig.readLoggedUser();
             String role = user.getRole();
             goByRole(role);

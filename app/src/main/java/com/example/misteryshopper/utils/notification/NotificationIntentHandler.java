@@ -52,7 +52,7 @@ public class NotificationIntentHandler extends IntentService {
                                     public void dataIsLoaded(List<?> obj, List<String> keys) {
                                         MessageCreationService.buildMessage(getApplicationContext(),
                                                 token, getApplicationContext().getString(R.string.response_notification), name + " " + surname, "accepted");
-                                     NotificationHandler.cancelNotification(NotificationHandler.getNotId());
+                                     NotificationHandler.cancelNotification();
                                     }
                                 });
 
@@ -69,7 +69,7 @@ public class NotificationIntentHandler extends IntentService {
                                     public void dataIsLoaded(List<?> obj, List<String> keys) {
                                         MessageCreationService.buildMessage(getApplicationContext(),
                                                 token,getApplicationContext().getString(R.string.response_notification), name + " " + surname, "declined");
-                                        NotificationHandler.cancelNotification(NotificationHandler.getNotId());
+                                        NotificationHandler.cancelNotification();
                                     }
                                 });
                             }
@@ -85,7 +85,7 @@ public class NotificationIntentHandler extends IntentService {
                                 go.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 go.putExtra("address",address);
                                 startActivity(go);
-                                NotificationHandler.cancelNotification(NotificationHandler.getNotId());
+                                NotificationHandler.cancelNotification();
                             }
                         });
                         break;

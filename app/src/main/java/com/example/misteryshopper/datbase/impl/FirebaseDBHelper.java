@@ -128,9 +128,19 @@ public class FirebaseDBHelper implements DBHelper {
                                     public void dataIsLoaded(List<?> obj, List<String> keys) {
                                         String role = (String) obj.get(0);
                                         if (role.equals(SHOPPER)) {
-                                            getShopperByMail(userMail, status);
+                                            getShopperByMail(userMail, new DataStatus() {
+                                                @Override
+                                                public void dataIsLoaded(List<?> obj, List<String> keys) {
+                                                    status.dataIsLoaded(obj,keys);
+                                                }
+                                            });
                                         } else {
-                                            getEmployerByMail(userMail, status);
+                                            getEmployerByMail(userMail, new DataStatus() {
+                                                @Override
+                                                public void dataIsLoaded(List<?> obj, List<String> keys) {
+                                                    status.dataIsLoaded(obj,keys);
+                                                }
+                                            });
                                         }
                                     }
 
@@ -143,6 +153,7 @@ public class FirebaseDBHelper implements DBHelper {
                     }
                 }
             });
+
     }
 
 

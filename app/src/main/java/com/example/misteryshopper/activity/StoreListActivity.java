@@ -99,7 +99,7 @@ public class StoreListActivity extends AppCompatActivity implements RecyclerView
                         DialogUIHelper.createStoreDialog(model, StoreListActivity.this);
                         return true;
             case R.id.log_out:
-                mDBHelper.signOut(this);
+                mDBHelper.signOut(getApplicationContext());
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                return true;
         }

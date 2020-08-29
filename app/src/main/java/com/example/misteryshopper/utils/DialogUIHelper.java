@@ -189,11 +189,15 @@ public class DialogUIHelper {
                        @Override
                        public void dataIsLoaded(List<?> obj, List<String> keys) {
                            mDBHelper.getTokenByMail(mailShopper, (obj1, keys1) -> {
-                               Log.i("DILAOGTOKEN", (String) obj1.get(0));
-                               MessageCreationService.buildMessage(context, (String) obj1.get(0),
-                                       context.getString(R.string.notification_of_employment), model.getCity() + "\n" + model.getAddress()
-                                       , dateStr, String.valueOf(feeNumber), model.geteName(),
-                                       idEmployer,hiringModel.getId(),model.getImageUri());
+                               if(!obj1.isEmpty() && obj1.get(0)!= null ) {
+                                   Log.i("DILAOGTOKEN", (String) obj1.get(0));
+                                   MessageCreationService.buildMessage(context, (String) obj1.get(0),
+                                           context.getString(R.string.notification_of_employment), model.getCity() + "\n" + model.getAddress()
+                                           , dateStr, String.valueOf(feeNumber), model.geteName(),
+                                           idEmployer, hiringModel.getId(), model.getImageUri());
+                               }else{
+                                   Toast.makeText(context,"token error plz try again",Toast.LENGTH_LONG).show();
+                               }
                            });
                            dialog.dismiss();
                        }

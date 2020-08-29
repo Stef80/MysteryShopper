@@ -90,8 +90,10 @@ public class RecyclerViewConfig {
         }
 
         public void bind(ShopperModel shopper, String key) {
-            name.setText(shopper.getName());
-            surname.setText(shopper.getSurname());
+            String nameStr = shopper.getName().trim().replaceAll(" ","\n");
+            String surnameStr = shopper.getSurname().trim().replaceAll(" ","\n");
+            name.setText(nameStr);
+            surname.setText(surnameStr);
             city.setText(shopper.getCity());
             String imageUri = shopper.getImageUri();
             //
