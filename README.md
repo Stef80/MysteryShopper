@@ -18,7 +18,7 @@
  <p>la registrazione viene effettuata attraverso la compilazione di un apposito form per ciasucn tipo di utenza</p>
  </img>
  <hr>
- <h3>Login<h3>
+ <h3>Login</h3>
  <p>Una volta registrato baterà effettuare il login per entrare nella pagina dell'utenza a cui ci si è iscritti</p>
 <table cellspacing="2" cellpadding="2" width="400" border="0">
 <tbody>
@@ -39,7 +39,7 @@
 </tbody>
 </table>
 <hr>
-<h3>Notifiche<h3>
+<h3>Notifiche</h3>
  <p>Quando uno shopper viene scelto per un ingaggio riceve una notifica in cui sono presenti gli estremi per l'ingaggio, inoltre aprendo l'applicazione 
   può vedere una lista di tutte le richieste ricevute e il loro stato</p>
   <img src="https://github.com/Stef80/MysteryShopper/blob/master/notification_shopper%5B1%5D.gif" width=150 height=250/>
@@ -47,7 +47,7 @@
  <p>Alla ricezione della notifica lo shopper potrà decidere se accettare oppure rifiutare e una volta effettuata la scelta verrà inviata una notifica all'employer che lo ha ingaggiato della propria decisione</p>
    <img src="https://github.com/Stef80/MysteryShopper/blob/master/notification_employer%5B1%5D.gif" width=150 height=250/>
    <hr>
-   <h3>Visualizzazione del luogo</p>
+   <h3>Visualizzazione del luogo</h3>
    <p>Lo shopper prima di accettare attraverso google maps può verificare l'ubicazione del luogo </p>
     
 <table cellspacing="2" cellpadding="2" width="400" border="0">
