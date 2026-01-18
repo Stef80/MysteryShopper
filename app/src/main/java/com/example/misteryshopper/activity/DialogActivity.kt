@@ -1,24 +1,17 @@
-package com.example.misteryshopper.activity;
+package com.example.misteryshopper.activity
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
+import android.app.Activity
+import android.os.Bundle
+import com.example.misteryshopper.utils.DialogUIHelper
 
-import androidx.annotation.Nullable;
+class DialogActivity : Activity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-import com.example.misteryshopper.utils.DialogUIHelper;
-
-public class DialogActivity extends Activity {
-
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Intent notificationIntent = getIntent();
-        Bundle extras = notificationIntent.getExtras();
-        String name = extras.getString("name");
-        String outcome = extras.getString("outcome");
-        DialogUIHelper.buildDialogResponse(DialogActivity.this,name,outcome);
+        val notificationIntent = getIntent()
+        val extras = notificationIntent.getExtras()
+        val name = extras!!.getString("name")
+        val outcome = extras.getString("outcome")
+        DialogUIHelper.buildDialogResponse(this@DialogActivity, name!!, outcome!!)
     }
 }

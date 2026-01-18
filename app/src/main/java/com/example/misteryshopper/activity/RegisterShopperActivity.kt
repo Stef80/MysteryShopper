@@ -1,115 +1,164 @@
-package com.example.misteryshopper.activity;
+package com.example.misteryshopper.activity
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import android.text.TextUtils
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.misteryshopper.MainActivity
+import com.example.misteryshopper.R
+import com.example.misteryshopper.datbase.DBHelper
+import com.example.misteryshopper.datbase.DBHelper.DataStatus
+import com.example.misteryshopper.datbase.impl.FirebaseDBHelper
+import com.example.misteryshopper.models.ShopperModel
+import com.example.misteryshopper.utils.camera.PictureHandler
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
+class RegisterShopperActivity : ComponentActivity() {
+    private val mDbHelper: DBHelper = FirebaseDBHelper.instance
+    private var userId: String? = null
 
-import com.example.misteryshopper.MainActivity;
-import com.example.misteryshopper.R;
-import com.example.misteryshopper.datbase.DBHelper;
-import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
-import com.example.misteryshopper.models.ShopperModel;
-import com.example.misteryshopper.utils.camera.PictureHandler;
-
-import java.util.List;
-
-
-public class RegisterShopperActivity extends AppCompatActivity {
-
-    private static final String TAG = "ShopperProfileActivity";
-    private EditText name;
-    private EditText surname;
-    private EditText address;
-    private EditText city;
-    private EditText cf;
-    private EditText email;
-    private EditText password;
-    private Button imageAdd;
-    private DBHelper mDbHelper = FirebaseDBHelper.getInstance();
-
-    private String userId;
-
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-
-        name = findViewById(R.id.nameEditText);
-
-        surname = findViewById(R.id.surnameEditTxt);
-
-        cf = findViewById(R.id.cfEditTxt);
-
-        address = findViewById(R.id.addressEditTxt);
-
-        city = findViewById(R.id.cityEditTxt);
-
-        email = findViewById(R.id.emailEditRegTxt);
-
-        password = findViewById(R.id.passwordEditRegTxt);
-
-        imageAdd = findViewById(R.id.image_add_label);
-
-        imageAdd.setOnClickListener(v -> PictureHandler.getPicture(RegisterShopperActivity.this));
-
-        Button rButton = findViewById(R.id.buttonRegister);
-        rButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ShopperModel shopper = new ShopperModel();
-                shopper.setName(name.getText().toString());
-                shopper.setSurname(surname.getText().toString());
-                shopper.setAddress(address.getText().toString());
-                shopper.setCf(cf.getText().toString());
-                shopper.setCity(city.getText().toString());
-                String mail = email.getText().toString();
-                String pas = password.getText().toString();
-                if (TextUtils.isEmpty(mail)) {
-                    email.setError(getResources().getString(R.string.email_not_inserted));
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            RegisterShopperScreen(
+                onRegisterClick = { shopper, email, pass ->
+                    registerShopper(shopper, email, pass)
                 }
-                if (TextUtils.isEmpty(pas)) {
-                    password.setError(getResources().getString(R.string.invalid_password));
-                }
-                if (pas.length() <= 5) {
-                    password.setError(getResources().getString(R.string.invalid_password_lenght));
-                }
-                shopper.setEmail(email.getText().toString());
-
-                if (!TextUtils.isEmpty(mail) && !TextUtils.isEmpty(pas))
-                    mDbHelper.register(shopper, mail, pas, getApplicationContext(), new FirebaseDBHelper.DataStatus() {
-                        @Override
-                        public void dataIsLoaded(List<?> obj, List<String> keys) {
-                            userId = mDbHelper.getIdCurrentUser();
-                            PictureHandler.uploaImageWithoutShow(userId, "Shopper", getApplicationContext());
-                            startActivity(new Intent(RegisterShopperActivity.this, MainActivity.class));
-                            finish();
-                        }
-                    });
-
-            }
-        });
-
+            )
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PictureHandler.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Log.i(TAG, "run: userId" + userId);
+    private fun registerShopper(shopper: ShopperModel, mail: String, pas: String) {
+        var error = false
+        if (TextUtils.isEmpty(mail)) {
+            Toast.makeText(this, R.string.email_not_inserted, Toast.LENGTH_SHORT).show()
+            error = true
+        }
+        if (TextUtils.isEmpty(pas)) {
+            Toast.makeText(this, R.string.invalid_password, Toast.LENGTH_SHORT).show()
+            error = true
+        }
+        if (pas.length <= 5) {
+            Toast.makeText(this, R.string.invalid_password_lenght, Toast.LENGTH_SHORT).show()
+            error = true
+        }
+        if (error) return
 
+        mDbHelper.register(
+            shopper,
+            mail,
+            pas,
+            applicationContext,
+            object : DataStatus {
+                override fun dataIsLoaded(
+                    obj: MutableList<*>?,
+                    keys: MutableList<String?>?
+                ) {
+                    userId = mDbHelper.idCurrentUser
+                    PictureHandler.uploaImageWithoutShow(
+                        userId,
+                        "Shopper",
+                        applicationContext
+                    )
+                    startActivity(
+                        Intent(
+                            this@RegisterShopperActivity,
+                            MainActivity::class.java
+                        )
+                    )
+                    finish()
+                }
+            })
+    }
+}
+
+
+@Composable
+fun RegisterShopperScreen(onRegisterClick: (ShopperModel, String, String) -> Unit) {
+
+    var name by remember { mutableStateOf("") }
+    var surname by remember { mutableStateOf("") }
+    var address by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
+    var cf by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // Picture was taken successfully
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(60.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(R.string.name)) }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = surname, onValueChange = { surname = it }, label = { Text(stringResource(R.string.surname)) }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text(stringResource(R.string.address)) }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = city, onValueChange = { city = it }, label = { Text(stringResource(R.string.city)) }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = cf, onValueChange = { cf = it }, label = { Text(stringResource(R.string.cf)) }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text(stringResource(R.string.prompt_email)) }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text(stringResource(R.string.prompt_password)) },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(onClick = {
+            val intent = PictureHandler.getIntentForPicture(context)
+            takePictureLauncher.launch(intent)
+        }) {
+            Text(text = stringResource(id = R.string.add_image))
         }
 
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            onClick = {
+                val shopper = ShopperModel().apply {
+                    this.name = name
+                    this.surname = surname
+                    this.address = address
+                    this.city = city
+                    this.cf = cf
+                    this.email = email
+                }
+                onRegisterClick(shopper, email, password)
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(id = R.string.action_sign_in_short))
+        }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultRegisterShopperPreview() {
+    RegisterShopperScreen { _, _, _ -> }
 }

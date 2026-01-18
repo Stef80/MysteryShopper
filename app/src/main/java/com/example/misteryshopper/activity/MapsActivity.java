@@ -3,7 +3,6 @@ package com.example.misteryshopper.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.location.Address;
@@ -15,9 +14,6 @@ import android.widget.Toast;
 
 import com.example.misteryshopper.MainActivity;
 import com.example.misteryshopper.R;
-import com.example.misteryshopper.models.StoreModel;
-import com.example.misteryshopper.utils.DialogUIHelper;
-import com.example.misteryshopper.utils.SharedPrefConfig;
 import com.example.misteryshopper.utils.maps.LocationHandler;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

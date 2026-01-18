@@ -1,146 +1,183 @@
-package com.example.misteryshopper.utils.notification;
+package com.example.misteryshopper.utils.notification
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.format.DateUtils;
-import android.util.Log;
-import android.widget.RemoteViews;
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.text.format.DateUtils
+import android.util.Log
+import android.widget.RemoteViews
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.misteryshopper.R
+import com.example.misteryshopper.activity.MyApplication
+import com.example.misteryshopper.activity.StoreListActivity
+import com.squareup.picasso.Picasso
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+object NotificationHandler {
+    var notId: Int = 0
+        private set
+    private var notificationManager: NotificationManagerCompat? = null
 
-import com.example.misteryshopper.R;
-import com.example.misteryshopper.activity.MyApplication;
-import com.squareup.picasso.Picasso;
+    fun displayNotificationShopper(
+        context: Context,
+        title: String?,
+        place: String?,
+        `when`: String?,
+        fee: String?,
+        eName: String?,
+        id: String?,
+        hId: String?,
+        uriImg: String?,
+        notificationId: Int
+    ) {
+        notId = notificationId
+        val collapsedView =
+            RemoteViews(context.packageName, R.layout.notification_shopper_layout)
+        collapsedView.setTextViewText(R.id.content_title_collapsed, title)
+        collapsedView.setTextViewText(R.id.notification_ename_collapsed, eName)
+        collapsedView.setTextViewText(
+            R.id.timestamp,
+            DateUtils.formatDateTime(
+                context,
+                System.currentTimeMillis(),
+                DateUtils.FORMAT_SHOW_TIME
+            )
+        )
 
-import static android.content.ContentValues.TAG;
+        val expandedView =
+            RemoteViews(context.packageName, R.layout.notification_shopper_layout_expanse)
+        expandedView.setTextViewText(R.id.content_title_expanded, title)
+        expandedView.setTextViewText(R.id.notification_ename, eName)
+        expandedView.setTextViewText(R.id.notification_place, place)
+        expandedView.setTextViewText(R.id.notification_when, `when`)
+        expandedView.setTextViewText(R.id.notification_fee, fee)
+        expandedView.setTextViewText(
+            R.id.timestamp_expanded,
+            DateUtils.formatDateTime(
+                context,
+                System.currentTimeMillis(),
+                DateUtils.FORMAT_SHOW_TIME
+            )
+        )
 
+        val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
 
-public class NotificationHandler {
+        // Accept Action
+        val acceptIntent = Intent(context, NotificationActionReceiver::class.java).apply {
+            action = "accept"
+            putExtra(NotificationActionWorker.KEY_EMPLOYER_ID, id)
+            putExtra(NotificationActionWorker.KEY_HIRING_ID, hId)
+        }
+        val acceptPendingIntent = PendingIntent.getBroadcast(context, 0, acceptIntent, flag or PendingIntent.FLAG_UPDATE_CURRENT)
+        expandedView.setOnClickPendingIntent(R.id.accept_button, acceptPendingIntent)
 
+        // Decline Action
+        val declineIntent = Intent(context, NotificationActionReceiver::class.java).apply {
+            action = "decline"
+            putExtra(NotificationActionWorker.KEY_EMPLOYER_ID, id)
+            putExtra(NotificationActionWorker.KEY_HIRING_ID, hId)
+        }
+        val declinePendingIntent = PendingIntent.getBroadcast(context, 1, declineIntent, flag or PendingIntent.FLAG_UPDATE_CURRENT)
+        expandedView.setOnClickPendingIntent(R.id.decline_button, declinePendingIntent)
 
-    private static int notId;
-    private static NotificationManagerCompat notificationManager;
-
-   public static void displayNotificationShopper(Context context, String title, String place, String when, String fee, String eName, String id, String hId, String uriImg, int notificationId) {
-
-        notId = notificationId;
-       RemoteViews collapsedView = new RemoteViews(context.getPackageName(),R.layout.notification_shopper_layout);
-        collapsedView.setTextViewText(R.id.content_title_collapsed,title);
-        collapsedView.setTextViewText(R.id.notification_ename_collapsed,eName);
-        collapsedView.setTextViewText(R.id.timestamp,DateUtils.formatDateTime(context, System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME));
-
-       RemoteViews expandedView = new RemoteViews(context.getPackageName(),R.layout.notification_shopper_layout_expanse);
-       expandedView.setTextViewText(R.id.content_title_expanded,title);
-       expandedView.setTextViewText(R.id.notification_ename,eName);
-       expandedView.setTextViewText(R.id.notification_place,place);
-       expandedView.setTextViewText(R.id.notification_when,when);
-       expandedView.setTextViewText(R.id.notification_fee,fee);
- /*      if (uriImg != null) {
-           Log.i(TAG, "displayNotificationShopper: imageUri : "+ uriImg);
-           Log.i(TAG, "displayNotificationShopper: Uri: " + Uri.parse(uriImg).toString());
-           expandedView.setImageViewUri(R.id.notification_img,Uri.parse(uriImg));
-       }*/
-       expandedView.setTextViewText(R.id.timestamp_expanded,DateUtils.formatDateTime(context, System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME));
-
-       Intent acceptIntent = new Intent(context, NotificationIntentHandler.class);
-       acceptIntent.setAction("accept");
-       acceptIntent.putExtra("id",id);
-       acceptIntent.putExtra("hId",hId);
-       expandedView.setOnClickPendingIntent(R.id.accept_button,PendingIntent.getService(context,0,acceptIntent,PendingIntent.FLAG_UPDATE_CURRENT));
-
-       Intent declineIntent = new Intent(context,NotificationIntentHandler.class);
-       declineIntent.setAction("decline");
-       declineIntent.putExtra("id",id);
-       declineIntent.putExtra("hId",hId);
-       expandedView.setOnClickPendingIntent(R.id.decline_button,PendingIntent.getService(context,1,declineIntent,PendingIntent.FLAG_UPDATE_CURRENT));
-
-       Intent showIntent = new Intent(context,NotificationIntentHandler.class);
-       showIntent.setAction("show");
-       showIntent.putExtra("id",id);
-       showIntent.putExtra("hId",hId);
-       showIntent.putExtra("address", place);
-       expandedView.setOnClickPendingIntent(R.id.show_button,PendingIntent.getService(context,2,showIntent,PendingIntent.FLAG_UPDATE_CURRENT));
-       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MyApplication.PRIMARY_CHANNEL_ID)
-               .setSmallIcon(R.drawable.i_notifiation)
-               .setContentTitle(title)
-               .setCustomHeadsUpContentView(collapsedView)
-               .setCustomContentView(collapsedView)
-               .setCustomBigContentView(expandedView)
-               .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-               .setAutoCancel(true);
-             //  .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
-       Notification notification = builder.build();
-       Log.i(TAG, "displayNotificationShopper:  notification id: " + notificationId);
-       notificationManager.notify(notId,notification);
-       Handler handler = new Handler(Looper.getMainLooper());
-       handler.post(new Runnable() {
-           @Override
-           public void run() {
-               if(uriImg != null)
-               Picasso.get().load(uriImg).into(expandedView,R.id.notification_img,notId,notification);
-           }
-       });
+        // Show Action
+        val showIntent = Intent(context, NotificationActionReceiver::class.java).apply {
+            action = "show"
+            putExtra(NotificationActionWorker.KEY_ADDRESS, place)
+        }
+        val showPendingIntent = PendingIntent.getBroadcast(context, 2, showIntent, flag or PendingIntent.FLAG_UPDATE_CURRENT)
+        expandedView.setOnClickPendingIntent(R.id.show_button, showPendingIntent)
 
 
-   }
+        val builder = NotificationCompat.Builder(context, MyApplication.PRIMARY_CHANNEL_ID)
+            .setSmallIcon(R.drawable.i_notifiation)
+            .setContentTitle(title)
+            .setCustomHeadsUpContentView(collapsedView)
+            .setCustomContentView(collapsedView)
+            .setCustomBigContentView(expandedView)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
 
-    public static void displayNotificationEmployer(Context context, String title, String sName, String outcome, int notificationId) {
-       notId = notificationId;
-        RemoteViews customView = new RemoteViews(context.getPackageName(),R.layout.notification_employer_layout);
-         customView.setTextViewText(R.id.title_response,title);
-         customView.setTextViewText(R.id.notification_sname,sName);
-         customView.setTextViewText(R.id.notification_response,outcome);
-         customView.setTextViewText(R.id.timestamp_employer,DateUtils.formatDateTime(context, System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME));
+        val notification = builder.build()
+        notificationManager!!.notify(notId, notification)
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            if (uriImg != null) Picasso.get().load(uriImg)
+                .into(expandedView, R.id.notification_img, notId, notification)
+        }
+    }
 
-           Intent intent = new Intent(context,NotificationReciver.class);
-           intent.putExtra("name", sName);
-           intent.putExtra("outcome", outcome);
-           intent.setAction("showmessage");
-           PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    fun displayNotificationEmployer(
+        context: Context,
+        title: String?,
+        sName: String?,
+        outcome: String?,
+        notificationId: Int
+    ) {
+        notId = notificationId
+        val customView =
+            RemoteViews(context.packageName, R.layout.notification_employer_layout)
+        customView.setTextViewText(R.id.title_response, title)
+        customView.setTextViewText(R.id.notification_sname, sName)
+        customView.setTextViewText(R.id.notification_response, outcome)
+        customView.setTextViewText(
+            R.id.timestamp_employer,
+            DateUtils.formatDateTime(
+                context,
+                System.currentTimeMillis(),
+                DateUtils.FORMAT_SHOW_TIME
+            )
+        )
+        
+        val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+        val intent = Intent(context, StoreListActivity::class.java).apply {
+            putExtra("notification_name", sName)
+            putExtra("notification_outcome", outcome)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        val pendingIntent =
+            PendingIntent.getActivity(context, 0, intent, flag or PendingIntent.FLAG_UPDATE_CURRENT)
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MyApplication.PRIMARY_CHANNEL_ID)
-                .setSmallIcon(R.drawable.i_notifiation)
-                .setCustomContentView(customView)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-               // .setStyle(new NotificationCompat.DecoratedCustomViewStyle());
-        Log.i(TAG, "displayNotificationEmployer: notification id: " + notificationId);
-        notificationManager.notify(notificationId,builder.build());
+        val builder = NotificationCompat.Builder(context, MyApplication.PRIMARY_CHANNEL_ID)
+            .setSmallIcon(R.drawable.i_notifiation)
+            .setCustomContentView(customView)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+        Log.i(ContentValues.TAG, "displayNotificationEmployer: notification id: $notificationId")
+        notificationManager!!.notify(notificationId, builder.build())
     }
 
 
-    public static void cancelNotification(){
-       notificationManager.cancel(getNotId());
+    @JvmStatic
+    fun cancelNotification() {
+        notificationManager!!.cancel(
+            notId
+        )
     }
 
 
-
-
-    public static void createNotificationChannel(Context context) {
-       if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-           NotificationChannel notificationChannel = new NotificationChannel(MyApplication.PRIMARY_CHANNEL_ID,
-                   "channel 1", NotificationManager.IMPORTANCE_HIGH);
-           notificationChannel.enableLights(true);
-           notificationChannel.setLightColor(Color.RED);
-           notificationChannel.enableVibration(true);
-           notificationChannel.setDescription("Notification from Mystery Shopper");
-           notificationManager = NotificationManagerCompat.from(context);
-           notificationManager.createNotificationChannel(notificationChannel);
-       }
+    fun createNotificationChannel(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                MyApplication.PRIMARY_CHANNEL_ID,
+                "channel 1", NotificationManager.IMPORTANCE_HIGH
+            )
+            notificationChannel.enableLights(true)
+            notificationChannel.setLightColor(Color.RED)
+            notificationChannel.enableVibration(true)
+            notificationChannel.setDescription("Notification from Mystery Shopper")
+            notificationManager = NotificationManagerCompat.from(context)
+            notificationManager!!.createNotificationChannel(notificationChannel)
+        }
     }
-
-
-    public static int getNotId() {
-        return notId;
-    }
-
 }

@@ -1,68 +1,35 @@
-package com.example.misteryshopper.datbase;
+package com.example.misteryshopper.datbase
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Context
+import android.net.Uri
+import com.example.misteryshopper.models.*
 
+interface DBHelper {
 
-import com.example.misteryshopper.models.HiringModel;
-import com.example.misteryshopper.models.StoreModel;
-import com.example.misteryshopper.models.User;
+    suspend fun readShoppers(): List<ShopperModel>
+    suspend fun register(model: User, email: String, password: String, context: Context): String?
+    suspend fun login(userMail: String, password: String, context: Context): User?
+    fun signOut(context: Context)
+    suspend fun getShopperByMail(mail: String): ShopperModel?
+    suspend fun getEmployerByMail(mail: String): EmployerModel?
+    suspend fun getUserById(uId: String): User?
+    suspend fun getRole(uId: String): String?
+    suspend fun readStoreOfSpecificUser(uId: String): List<StoreModel>
+    suspend fun addStoreOfSpecificId(model: StoreModel)
+    suspend fun addTokenToUser(user: User, context: Context): String?
+    suspend fun getTokenByMail(mail: String): String?
+    suspend fun getTokenById(id: String): String?
+    suspend fun addHiringModel(model: HiringModel)
+    suspend fun setOutcome(hId: String, outcome: String?)
+    suspend fun getHireByMail(mail: String): List<HiringModel>
+    suspend fun setHireDone(id: String)
+    suspend fun addImageToUserById(id: String, imageUri: Uri, context: Context)
+    suspend fun addImageToStoreById(id: String, imageUri: Uri, context: Context)
+    suspend fun setTotalForUserId(id: String, totalAmount: Double)
+    val idCurrentUser: String?
 
-import java.util.List;
-
-public interface DBHelper {
-
-
-    public void readShoppers(DataStatus status);
-
-    public void register(final User model, String email, String password, Context context, final DataStatus status);
-
-    public void login(String user, String password, final Context context,final DataStatus status);
-
-    public void signOut(Context context);
-
-    public void getShopperByMail(String mail, DataStatus callback);
-
-    public void getEmployerByMail(String mail, DataStatus callback);
-
-    public Object getCurrentUser();
-
-    public void  getUserById(String UId,DataStatus status);
-
-    public String getIdCurrentUser();
-
-    public void getRole(String uId,DataStatus status);
-
-    public void readStoreOfSpecificUser(String UId, DataStatus status);
-
-    public void updateUsers(User model, String id, Context context, DataStatus status);
-
-    public void addStoreOfSpecificId(StoreModel model, DataStatus status);
-
-    void addTokenToUser(User user, Context context,DataStatus status);
-
-    void getTokenByMail(String mail, DataStatus status);
-
-    void getTokenById(String id,DataStatus status);
-
-    void addHiringModel(HiringModel model, DataStatus dataStatus);
-
-    void setOutcome(String hId,String outcome,DataStatus status);
-
-    void getHireByMail(String mail, DataStatus status);
-
-    void setHireDone(String id);
-
-    void addImageToUserById(String id, Uri imageUri,Context context, DataStatus status);
-
-    void addImageToStoreById(String id,Uri imageUri,Context context, DataStatus status);
-
-    void setTotalForUserId(String id, double totalAmount);
-
-
-    public interface DataStatus {
-        void dataIsLoaded(List<? extends Object> obj, List<String> keys);
-
+    // The DataStatus interface is no longer needed with coroutines
+    interface DataStatus {
+        fun dataIsLoaded(obj: MutableList<*>?, keys: MutableList<String?>?)
     }
-
 }

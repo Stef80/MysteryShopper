@@ -1,65 +1,81 @@
-package com.example.misteryshopper.utils.notification;
+package com.example.misteryshopper.utils.notification
 
-import android.util.Log;
-import android.widget.Toast;
+import android.util.Log
+import com.example.misteryshopper.R
+import com.example.misteryshopper.datbase.impl.FirebaseDBHelper
+import com.example.misteryshopper.utils.SharedPrefConfig
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.util.*
 
-import androidx.annotation.NonNull;
+class MyNotificationService : FirebaseMessagingService() {
 
-import com.example.misteryshopper.R;
-import com.example.misteryshopper.datbase.DBHelper;
-import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
-import com.example.misteryshopper.utils.SharedPrefConfig;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.google.firebase.messaging.RemoteMessage;
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        Log.i(TAG, "onMessageReceived: remote message data: ${remoteMessage.data}")
 
-import java.util.Map;
-import java.util.Random;
+        val data = remoteMessage.data
+        val title = data[KEY_TITLE]
 
-import static android.content.ContentValues.TAG;
-
-public class MyNotificationService extends FirebaseMessagingService {
-
-    private Random random;
-    {
-     random  = new Random(1);
-    }
-
-
-    @Override
-    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-
-        Log.i(TAG, "onMessageReceived: remote message:" + remoteMessage.getData());
-        if(remoteMessage != null){
-            Map<String, String> body = remoteMessage.getData();
-            String title = body.get("title");
-            if(title.equals(getString(R.string.notification_of_employment))) {
-                int notificationId =random.nextInt(100);
-                NotificationHandler.displayNotificationShopper(getApplicationContext(), title, body.get("place"),
-                        body.get("when"), body.get("fee"), body.get("eName"),body.get("id"),
-                        body.get("hId"),body.get("storeId"),notificationId);
-                remoteMessage = null;
+        when (title) {
+            getString(R.string.notification_of_employment) -> {
+                handleShopperNotification(data)
             }
-            if(title.equals(getString(R.string.response_notification))){
-                int notificationId = random.nextInt(100);
-                NotificationHandler.displayNotificationEmployer(getApplicationContext(),title,body.get("sName"),
-                        body.get("outcome"),notificationId);
+            getString(R.string.response_notification) -> {
+                handleEmployerNotification(data)
             }
         }
     }
 
-
-        @Override
-    public void onNewToken(@NonNull String s) {
-            SharedPrefConfig preferences = new SharedPrefConfig(this);
-            if(preferences.readLoggedUser()!= null) {
-                String token = preferences.readLoggedUser().getToken();
-                FirebaseMessaging.getInstance().subscribeToTopic(token)
-                        .addOnCompleteListener(x -> Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG));
-            }else{
-                FirebaseMessaging.getInstance().subscribeToTopic(s)
-                        .addOnCompleteListener(x -> Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG));
-            }
+    private fun handleShopperNotification(data: Map<String, String>) {
+        val notificationId = Random().nextInt(100)
+        NotificationHandler.displayNotificationShopper(
+            applicationContext,
+            data[KEY_TITLE],
+            data["place"],
+            data["when"],
+            data["fee"],
+            data["eName"],
+            data["id"],
+            data["hId"],
+            data["storeId"],
+            notificationId
+        )
     }
 
+    private fun handleEmployerNotification(data: Map<String, String>) {
+        val notificationId = Random().nextInt(100)
+        NotificationHandler.displayNotificationEmployer(
+            applicationContext,
+            data[KEY_TITLE],
+            data["sName"],
+            data["outcome"],
+            notificationId
+        )
+    }
+
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+        Log.d(TAG, "Refreshed token: $token")
+        // If a user is logged in, update their token in the database.
+        val preferences = SharedPrefConfig(this)
+        val loggedUser = preferences.readLoggedUser()
+        if (loggedUser != null) {
+            loggedUser.token = token
+            GlobalScope.launch {
+                try {
+                    FirebaseDBHelper.instance.updateUsers(loggedUser, loggedUser.id!!, applicationContext)
+                    Log.d(TAG, "Token updated successfully for user ${loggedUser.id}")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to update token", e)
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val TAG = "MyNotificationService"
+        private const val KEY_TITLE = "title"
+    }
 }

@@ -1,89 +1,95 @@
-package com.example.misteryshopper.utils.notification;
+package com.example.misteryshopper.utils.notification
 
+import android.content.Context
+import android.util.Log
+import com.android.volley.AuthFailureError
+import com.android.volley.toolbox.JsonObjectRequest
+import com.example.misteryshopper.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
+object MessageCreationService {
 
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
+    private const val FCM_API = "https://fcm.googleapis.com/fcm/send"
+    private const val TAG = "MessageCreationService"
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.misteryshopper.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.util.HashMap;
-import java.util.Map;
-
-import static android.content.ContentValues.TAG;
-
-public class MessageCreationService {
-
-    private static final String CONTENT_TYPE ="application/json";
-    private static final String FCM_API = "https://fcm.googleapis.com/fcm/send";
-
-
-    public static void buildMessage(Context context,String token, String notificationTitle,String message,String response){
-          buildMessage(context, token, notificationTitle, message,null, response,null,null,null,null);
-    }
-
-    public static void buildMessage(Context context,String token, String notificationTitle, String place , String when, String fee, String eName,String empId,String idHiring,String storeId) {
-        JSONObject notification = new JSONObject();
-        JSONObject body = new JSONObject();
-        try {
-            notification.put("to","topics/"+token);
-            body.put("title", notificationTitle);
-            if(notificationTitle.equals(context.getString(R.string.response_notification))){
-                body.put("sName", place);
-                body.put("outcome",fee);
-            }else {
-                body.put("place", place);
-                body.put("hId",idHiring);
-                body.put("storeId",storeId);
-                body.put("id",empId);
-                body.put("when", when);
-                body.put("fee", fee);
-                body.put("eName", eName);
-            }
-         //   notification.put("notification",body);
-            notification.put("data",body);
-        } catch (JSONException e) {
-            e.printStackTrace();
+    // Overloaded function for simple response messages
+    suspend fun buildMessage(
+        context: Context,
+        token: String?,
+        notificationTitle: String,
+        message: String?,
+        response: String?
+    ) {
+        if (token.isNullOrEmpty()) {
+            Log.e(TAG, "FCM Token is null or empty. Cannot send notification.")
+            return
         }
-        sendNotification(context,notification);
+        val body = JSONObject().apply {
+            put("title", notificationTitle)
+            put("sName", message)
+            put("outcome", response)
+        }
+        val notification = JSONObject().apply {
+            put("to", token)
+            put("data", body)
+        }
+        sendNotification(context, notification)
     }
 
-    private static void sendNotification(Context context,JSONObject notification) {
-        JsonObjectRequest request = new JsonObjectRequest(FCM_API, notification, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.i(TAG, "onResponse: " + response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if(error != null){
-                Log.i(TAG, error.networkResponse.headers.toString());
-                }else {
-                    Toast.makeText(context, "Request error", Toast.LENGTH_LONG).show();
+    // Main function for detailed hiring messages
+    suspend fun buildMessage(
+        context: Context,
+        token: String?,
+        notificationTitle: String,
+        place: String?,
+        `when`: String?,
+        fee: String?,
+        eName: String?,
+        empId: String?,
+        idHiring: String?,
+        storeId: String?
+    ) {
+        if (token.isNullOrEmpty()) {
+            Log.e(TAG, "FCM Token is null or empty. Cannot send notification.")
+            return
+        }
+        val body = JSONObject().apply {
+            put("title", notificationTitle)
+            put("place", place)
+            put("hId", idHiring)
+            put("storeId", storeId)
+            put("id", empId)
+            put("when", `when`)
+            put("fee", fee)
+            put("eName", eName)
+        }
+        val notification = JSONObject().apply {
+            put("to", token)
+            put("data", body)
+        }
+        sendNotification(context, notification)
+    }
+
+    private suspend fun sendNotification(context: Context, notification: JSONObject) = withContext(Dispatchers.IO) {
+        suspendCancellableCoroutine<JSONObject> { continuation ->
+            val request = object : JsonObjectRequest(Method.POST, FCM_API, notification,
+                { response -> continuation.resume(response) },
+                { error -> continuation.resumeWithException(error) }
+            ) {
+                @Throws(AuthFailureError::class)
+                override fun getHeaders(): Map<String, String> {
+                    return mapOf(
+                        "Authorization" to "key=${context.getString(R.string.notification_server_key)}",
+                        "Content-Type" to "application/json"
+                    )
                 }
             }
-        }){
-
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-               Map<String,String> params = new HashMap<>();
-                params.put("Authorization","key="+ context.getString(R.string.notification_server_key));
-                params.put("Content-Type",CONTENT_TYPE);
-               Log.i("SERVICE", params.toString());
-               return params;
-            }
-        };
-
-     MySingleton.getInstance(context).addToRequestQueue(request);
+            MySingleton.getInstance(context).addToRequestQueue(request)
+        }
     }
 }

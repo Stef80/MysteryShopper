@@ -1,36 +1,37 @@
-package com.example.misteryshopper.utils.notification;
+package com.example.misteryshopper.utils.notification
 
-import android.content.Context;
+import android.content.Context
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.Volley
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
+class MySingleton private constructor(private val ctx: Context) {
+    private var requestQueue: RequestQueue?
 
-public class MySingleton {
-    private  static MySingleton instance;
-    private RequestQueue requestQueue;
-    private Context ctx;
-
-    private MySingleton(Context context) {
-        ctx = context;
-        requestQueue = getRequestQueue();
+    init {
+        requestQueue = getRequestQueue()
     }
 
-    public static synchronized MySingleton getInstance(Context context) {
-        if (instance == null) {
-            instance = new MySingleton(context);
-        }
-        return instance;
-    }
-
-    public RequestQueue getRequestQueue() {
+    fun getRequestQueue(): RequestQueue {
         if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(ctx.getApplicationContext());
+            requestQueue = Volley.newRequestQueue(ctx.getApplicationContext())
         }
-        return requestQueue;
+        return requestQueue!!
     }
 
-    public <T> void addToRequestQueue(Request<T> req) {
-        getRequestQueue().add(req);
+    fun <T> addToRequestQueue(req: Request<T?>?) {
+        getRequestQueue().add<T?>(req)
+    }
+
+    companion object {
+        private var instance: MySingleton? = null
+
+        @Synchronized
+        fun getInstance(context: Context): MySingleton {
+            if (instance == null) {
+                instance = MySingleton(context)
+            }
+            return instance!!
+        }
     }
 }

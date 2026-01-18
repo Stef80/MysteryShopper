@@ -28,9 +28,6 @@ import com.example.misteryshopper.R;
 import com.example.misteryshopper.activity.ShopperListActivity;
 import com.example.misteryshopper.datbase.DBHelper;
 import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
-import com.example.misteryshopper.models.HiringModel;
-import com.example.misteryshopper.models.ShopperModel;
-import com.example.misteryshopper.models.StoreModel;
 import com.example.misteryshopper.utils.camera.CircleTransform;
 import com.example.misteryshopper.utils.notification.MessageCreationService;
 import com.squareup.picasso.Picasso;
@@ -43,14 +40,14 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 
 
-public class RecyclerViewConfig {
+public class RecyclerViewConfig_old {
 
 
     private Context context;
     private MyListAdapter shopperAdapter;
     private Intent intent;
 
-    public RecyclerViewConfig(Intent intent) {
+    public RecyclerViewConfig_old(Intent intent) {
         this.intent = intent;
     }
 

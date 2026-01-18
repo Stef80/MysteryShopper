@@ -1,40 +1,33 @@
-package com.example.misteryshopper.utils;
+package com.example.misteryshopper.utils
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import com.example.misteryshopper.activity.fragments.ListHiringFragment
+import com.example.misteryshopper.activity.fragments.ShopperProfileFragment
+import com.example.misteryshopper.models.ShopperModel
 
-import com.example.misteryshopper.activity.fragments.ListHiringFragment;
-import com.example.misteryshopper.activity.fragments.ShopperProfileFragment;
-import com.example.misteryshopper.models.ShopperModel;
+class MyPagerAdapter(fm: FragmentManager, behavior: Int, model: ShopperModel?) :
+    FragmentPagerAdapter(fm, behavior) {
+    private val model: ShopperModel?
 
-public class MyPagerAdapter extends FragmentPagerAdapter {
-
-    public static int NUM_ITEMS = 2;
-    private ShopperModel model;
-
-    public MyPagerAdapter(@NonNull FragmentManager fm, int behavior , ShopperModel model) {
-        super(fm, behavior);
-        this.model = model;
+    init {
+        this.model = model
     }
 
-    @NonNull
-    @Override
-    public Fragment getItem(int position) {
-        switch (position){
-            case 0:
-                return ShopperProfileFragment.newInstance(model);
-            case 1:
-                return ListHiringFragment.newInstance(1);
-            default:
-                return null;
+    override fun getItem(position: Int): Fragment? {
+        when (position) {
+            0 -> return ShopperProfileFragment.newInstance(model)
+            1 -> return ListHiringFragment.newInstance(1)
+            else -> return null
         }
-
     }
 
-    @Override
-    public int getCount() {
-        return NUM_ITEMS;
+    override fun getCount(): Int {
+        return NUM_ITEMS
+    }
+
+    companion object {
+        var NUM_ITEMS: Int = 2
     }
 }

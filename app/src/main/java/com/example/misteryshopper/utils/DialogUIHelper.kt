@@ -1,234 +1,230 @@
-package com.example.misteryshopper.utils;
+package com.example.misteryshopper.utils
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.text.TextUtils
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import com.example.misteryshopper.MainActivity
+import com.example.misteryshopper.R
+import com.example.misteryshopper.activity.RegisterEmployerActivity
+import com.example.misteryshopper.activity.RegisterShopperActivity
+import com.example.misteryshopper.activity.StoreListActivity
+import com.example.misteryshopper.datbase.DBHelper
+import com.example.misteryshopper.datbase.impl.FirebaseDBHelper
+import com.example.misteryshopper.models.EmployerModel
+import com.example.misteryshopper.models.HiringModel
+import com.example.misteryshopper.models.StoreModel
+import com.example.misteryshopper.utils.camera.PictureHandler
+import com.example.misteryshopper.utils.notification.MessageCreationService
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
+object DialogUIHelper {
 
-import com.example.misteryshopper.MainActivity;
-import com.example.misteryshopper.R;
-import com.example.misteryshopper.activity.RegisterEmployerActivity;
-import com.example.misteryshopper.activity.RegisterShopperActivity;
-import com.example.misteryshopper.activity.StoreListActivity;
-import com.example.misteryshopper.datbase.DBHelper;
-import com.example.misteryshopper.datbase.impl.FirebaseDBHelper;
-import com.example.misteryshopper.models.EmployerModel;
-import com.example.misteryshopper.models.HiringModel;
-import com.example.misteryshopper.models.StoreModel;
-import com.example.misteryshopper.utils.camera.PictureHandler;
-import com.example.misteryshopper.utils.notification.MessageCreationService;
+    private lateinit var sharedPref: SharedPrefConfig
 
-import java.util.List;
-
-public class DialogUIHelper {
-
-    private static DBHelper mDBHelper = FirebaseDBHelper.getInstance();
-    private static SharedPrefConfig sharedPref;
-
-    public static void createRegistationDialog(Context context) {
-        sharedPref = new SharedPrefConfig(context);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.dialog_main, null);
-        AlertDialog dialog = builder.create();
-        dialog.setView(dialogView);
-        Button retryBtn = dialogView.findViewById(R.id.retry_button);
-        retryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        Button regShopBtn = dialogView.findViewById(R.id.reg_shop_button);
-        regShopBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startActivity(new Intent(context, RegisterShopperActivity.class));
-            }
-        });
-
-        Button regEmpBtn = dialogView.findViewById(R.id.reg_empl_button);
-        regEmpBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startActivity(new Intent(context, RegisterEmployerActivity.class));
-            }
-        });
-        dialog.show();
-
+    fun createRegistationDialog(context: Context) {
+        sharedPref = SharedPrefConfig(context)
+        val builder = AlertDialog.Builder(context)
+        val inflater = LayoutInflater.from(context)
+        val dialogView = inflater.inflate(R.layout.dialog_main, null)
+        val dialog = builder.create()
+        dialog.setView(dialogView)
+        val retryBtn = dialogView.findViewById<Button>(R.id.retry_button)
+        retryBtn.setOnClickListener { dialog.dismiss() }
+        val regShopBtn = dialogView.findViewById<Button>(R.id.reg_shop_button)
+        regShopBtn.setOnClickListener {
+            context.startActivity(
+                Intent(
+                    context,
+                    RegisterShopperActivity::class.java
+                )
+            )
+        }
+        val regEmpBtn = dialogView.findViewById<Button>(R.id.reg_empl_button)
+        regEmpBtn.setOnClickListener {
+            context.startActivity(
+                Intent(
+                    context,
+                    RegisterEmployerActivity::class.java
+                )
+            )
+        }
+        dialog.show()
     }
 
-
-    public static void createStoreDialog(final StoreModel model, Context context) {
-           sharedPref = new SharedPrefConfig(context);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.dialog_add_store, null);
-        AlertDialog dialog = builder.create();
-        dialog.setView(dialogView);
-        EditText idShop = dialogView.findViewById(R.id.id_store_add);
-        EditText manager = dialogView.findViewById(R.id.manager_name_store_add);
-        EditText city = dialogView.findViewById(R.id.city_store_add);
-        EditText address = dialogView.findViewById(R.id.address_store_add);
-        Button addImage = dialogView.findViewById(R.id.image_add_dialog);
-        Button btnAdd = dialogView.findViewById(R.id.button_store_add);
-        Button btnCancel = dialogView.findViewById(R.id.button_store_cancel);
-
-        addImage.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View v) {
-                String storeId = idShop.getText().toString();
-                if(TextUtils.isEmpty(storeId))
-                    idShop.setError(context.getString(R.string.field_required));
-                else {
-                    sharedPref.writePrefString("store_id", storeId);
-                    StoreListActivity activity = (StoreListActivity) context;
-                    PictureHandler.getPicture(activity);
-                }
+    fun createStoreDialog(model: StoreModel, context: Context) {
+        sharedPref = SharedPrefConfig(context)
+        val builder = AlertDialog.Builder(context)
+        val inflater = LayoutInflater.from(context)
+        val dialogView = inflater.inflate(R.layout.dialog_add_store, null)
+        val dialog = builder.create()
+        dialog.setView(dialogView)
+        val idShop = dialogView.findViewById<EditText>(R.id.id_store_add)
+        val manager = dialogView.findViewById<EditText>(R.id.manager_name_store_add)
+        val city = dialogView.findViewById<EditText>(R.id.city_store_add)
+        val address = dialogView.findViewById<EditText>(R.id.address_store_add)
+        val addImage = dialogView.findViewById<Button>(R.id.image_add_dialog)
+        val btnAdd = dialogView.findViewById<Button>(R.id.button_store_add)
+        val btnCancel = dialogView.findViewById<Button>(R.id.button_store_cancel)
+        addImage.setOnClickListener {
+            val storeId = idShop.text.toString()
+            if (TextUtils.isEmpty(storeId)) idShop.error =
+                context.getString(R.string.field_required) else {
+                sharedPref.writePrefString("store_id", storeId)
+                val activity = context as StoreListActivity
+                PictureHandler.getPicture(activity)
             }
-        });
-        btnCancel.setOnClickListener(onClick->dialog.dismiss());
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String id = idShop.getText().toString();
-                String managerStr = manager.getText().toString();
-                String cityStr = city.getText().toString();
-                String adr = address.getText().toString();
-                if(TextUtils.isEmpty(id))
-                    idShop.setError(context.getString(R.string.field_required));
-                if(TextUtils.isEmpty(managerStr))
-                    manager.setError(context.getString(R.string.field_required));
-                if(TextUtils.isEmpty(cityStr))
-                    city.setError(context.getString(R.string.field_required));
-                if(TextUtils.isEmpty(adr))
-                    address.setError(context.getString(R.string.field_required));
-                EmployerModel user = (EmployerModel) sharedPref.readLoggedUser();
-                model.setIdStore(id);
-                model.seteName(user.getEmName());
-                model.setManager(manager.getText().toString());
-                model.setCity(city.getText().toString());
-                model.setAddress(address.getText().toString());
-                model.setImageUri(new SharedPrefConfig(context).readPrefString("imageUri"));
-                Log.i("USERINDIALOG", user.toString());
-                model.setIdEmployer(user.getId());
-             if(!(TextUtils.isEmpty(id) && TextUtils.isEmpty(managerStr) && TextUtils.isEmpty(cityStr) && TextUtils.isEmpty(adr))) {
-                 mDBHelper.addStoreOfSpecificId(model, new DBHelper.DataStatus() {
-                     @Override
-                     public void dataIsLoaded(List<?> obj, List<String> keys) {
-                         if (obj != null) {
-                             Toast.makeText(context, context.getString(R.string.shop_added), Toast.LENGTH_LONG).show();
-                             dialog.dismiss();
-                         } else {
-                             Toast.makeText(context, context.getString(R.string.shop_not_added), Toast.LENGTH_LONG).show();
-                             idShop.setText("");
-                             manager.setText("");
-                             city.setText("");
-                             address.setText("");
-                         }
-                     }
-
-                 });
-             }
+        }
+        btnCancel.setOnClickListener { onClick -> dialog.dismiss() }
+        btnAdd.setOnClickListener {
+            val id = idShop.text.toString()
+            val managerStr = manager.text.toString()
+            val cityStr = city.text.toString()
+            val adr = address.text.toString()
+            if (TextUtils.isEmpty(id)) idShop.error = context.getString(R.string.field_required)
+            if (TextUtils.isEmpty(managerStr)) manager.error =
+                context.getString(R.string.field_required)
+            if (TextUtils.isEmpty(cityStr)) city.error =
+                context.getString(R.string.field_required)
+            if (TextUtils.isEmpty(adr)) address.error =
+                context.getString(R.string.field_required)
+            val user = sharedPref.readLoggedUser() as EmployerModel
+            model.idStore = id
+            model.eName = user.emName
+            model.manager = manager.text.toString()
+            model.city = city.text.toString()
+            model.address = address.text.toString()
+            model.imageUri = SharedPrefConfig(context).readPrefString("imageUri")
+            Log.i("USERINDIALOG", user.toString())
+            model.idEmployer = user.id
+            if (!(TextUtils.isEmpty(id) && TextUtils.isEmpty(managerStr) && TextUtils.isEmpty(
+                    cityStr
+                ) && TextUtils.isEmpty(adr))
+            ) {
+                mDBHelper.addStoreOfSpecificId(model, object : DBHelper.DataStatus {
+                    override fun dataIsLoaded(obj: List<*>?, keys: List<String>?) {
+                        if (obj != null) {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.shop_added),
+                                Toast.LENGTH_LONG
+                            ).show()
+                            dialog.dismiss()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.shop_not_added),
+                                Toast.LENGTH_LONG
+                            ).show()
+                            idShop.setText("")
+                            manager.setText("")
+                            city.setText("")
+                            address.setText("")
+                        }
+                    }
+                })
             }
-        });
-        dialog.show();
+        }
+        dialog.show()
     }
 
-
-
-    public static void buildDialogHire(Context context,StoreModel model, String idEmployer,String mailShopper){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.dialog_hire, null);
-        AlertDialog dialog = builder.create();
-        dialog.setView(dialogView);
-        DatePicker date = dialogView.findViewById(R.id.date_picker_ref);
-        TextView storeId = dialogView.findViewById(R.id.store_id_ref);
-        TextView shopperMail = dialogView.findViewById(R.id.mail_shopper_ref);
-        TextView address = dialogView.findViewById(R.id.address_store_ref);
-        EditText fee = dialogView.findViewById(R.id.fee_edtxt_ref);
-        Button buttonHire = dialogView.findViewById(R.id.button_hire);
-        dialogView.findViewById(R.id.button_cancel_ref).setOnClickListener(x -> dialog.dismiss());
-
-        storeId.setText(model.getIdStore());
-        address.setText(model.getCity()+"\n"+model.getAddress());
-        shopperMail.setText(mailShopper);
-        date.setMinDate(System.currentTimeMillis());
-
-        buttonHire.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               String dateStr = date.getDayOfMonth()+"/"+
-                       (date.getMonth()+1)+"/"+
-                date.getYear();
-               String feeStr =fee.getText().toString();
-               if(TextUtils.isEmpty(feeStr)){
-                   fee.setError(context.getString(R.string.field_required));
-               }else {
-                   Double feeNumber = Double.valueOf(feeStr);
-                   String now =  String.valueOf(System.currentTimeMillis());
-                   String addressStore = address.getText().toString();
-                   HiringModel hiringModel = new HiringModel(now + idEmployer, idEmployer,
-                           model.geteName(), mailShopper,addressStore, model.getIdStore(), dateStr, feeNumber);
-                   mDBHelper.addHiringModel(hiringModel, new DBHelper.DataStatus() {
-                       @Override
-                       public void dataIsLoaded(List<?> obj, List<String> keys) {
-                           mDBHelper.getTokenByMail(mailShopper, (obj1, keys1) -> {
-                               if(!obj1.isEmpty() && obj1.get(0)!= null ) {
-                                   Log.i("DILAOGTOKEN", (String) obj1.get(0));
-                                   MessageCreationService.buildMessage(context, (String) obj1.get(0),
-                                           context.getString(R.string.notification_of_employment), model.getCity() + "\n" + model.getAddress()
-                                           , dateStr, String.valueOf(feeNumber), model.geteName(),
-                                           idEmployer, hiringModel.getId(), model.getImageUri());
-                               }else{
-                                   Toast.makeText(context,"token error plz try again",Toast.LENGTH_LONG).show();
-                               }
-                           });
-                           dialog.dismiss();
-                       }
-                   });
-               }
+    fun buildDialogHire(
+        context: Context,
+        model: StoreModel,
+        idEmployer: String,
+        mailShopper: String
+    ) {
+        val builder = AlertDialog.Builder(context)
+        val inflater = LayoutInflater.from(context)
+        val dialogView = inflater.inflate(R.layout.dialog_hire, null)
+        val dialog = builder.create()
+        dialog.setView(dialogView)
+        val date = dialogView.findViewById<DatePicker>(R.id.date_picker_ref)
+        val storeId = dialogView.findViewById<TextView>(R.id.store_id_ref)
+        val shopperMail = dialogView.findViewById<TextView>(R.id.mail_shopper_ref)
+        val address = dialogView.findViewById<TextView>(R.id.address_store_ref)
+        val fee = dialogView.findViewById<EditText>(R.id.fee_edtxt_ref)
+        val buttonHire = dialogView.findViewById<Button>(R.id.button_hire)
+        dialogView.findViewById<View>(R.id.button_cancel_ref)
+            .setOnClickListener { x -> dialog.dismiss() }
+        storeId.text = model.idStore
+        address.text = model.city + "\n" + model.address
+        shopperMail.text = mailShopper
+        date.minDate = System.currentTimeMillis()
+        buttonHire.setOnClickListener {
+            val dateStr = date.dayOfMonth.toString() + "/" +
+                    (date.month + 1) + "/" +
+                    date.year
+            val feeStr = fee.text.toString()
+            if (TextUtils.isEmpty(feeStr)) {
+                fee.error = context.getString(R.string.field_required)
+            } else {
+                val feeNumber = feeStr.toDouble()
+                val now = System.currentTimeMillis().toString()
+                val addressStore = address.text.toString()
+                val hiringModel = HiringModel(
+                    now + idEmployer, idEmployer,
+                    model.eName, mailShopper, addressStore, model.idStore, dateStr, feeNumber
+                )
+                mDBHelper.addHiringModel(hiringModel, object : DBHelper.DataStatus {
+                    override fun dataIsLoaded(obj: List<*>?, keys: List<String>?) {
+                        mDBHelper.getTokenByMail(
+                            mailShopper
+                        ) { obj1, keys1 ->
+                            if (obj1.isNotEmpty() && obj1[0] != null) {
+                                Log.i("DILAOGTOKEN", obj1[0] as String)
+                                MessageCreationService.buildMessage(
+                                    context, obj1[0] as String,
+                                    context.getString(R.string.notification_of_employment),
+                                    model.city + "\n" + model.address,
+                                    dateStr,
+                                    feeNumber.toString(),
+                                    model.eName,
+                                    idEmployer,
+                                    hiringModel.id,
+                                    model.imageUri
+                                )
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "token error plz try again",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                        dialog.dismiss()
+                    }
+                })
             }
-        });
-
-        dialog.show();
+        }
+        dialog.show()
     }
 
-
-    public static void buildDialogResponse(Context context, String name,String outcome){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.dialog_response, null);
-        AlertDialog dialog = builder.create();
-
-        dialog.setView(dialogView);
-        TextView nameView = dialogView.findViewById(R.id.dialog_respnse_message_name);
-        TextView outcomeView = dialogView.findViewById(R.id.dialog_response_outcome);
-        Button btnOk = dialogView.findViewById(R.id.dialog_ok_button);
-
-        nameView.setText(name);
-        outcomeView.setText(outcome);
-        btnOk.setOnClickListener(x-> {
-            Intent intent = new Intent(context, MainActivity.class);
-            context.startActivity(intent);
-            dialog.dismiss();
-        });
-        dialog.show();
+    fun buildDialogResponse(context: Context, name: String, outcome: String) {
+        val builder = AlertDialog.Builder(context)
+        val inflater = LayoutInflater.from(context)
+        val dialogView = inflater.inflate(R.layout.dialog_response, null)
+        val dialog = builder.create()
+        dialog.setView(dialogView)
+        val nameView = dialogView.findViewById<TextView>(R.id.dialog_respnse_message_name)
+        val outcomeView = dialogView.findViewById<TextView>(R.id.dialog_response_outcome)
+        val btnOk = dialogView.findViewById<Button>(R.id.dialog_ok_button)
+        nameView.text = name
+        outcomeView.text = outcome
+        btnOk.setOnClickListener { x ->
+            val intent = Intent(context, MainActivity::class.java)
+            context.startActivity(intent)
+            dialog.dismiss()
+        }
+        dialog.show()
     }
-
 }

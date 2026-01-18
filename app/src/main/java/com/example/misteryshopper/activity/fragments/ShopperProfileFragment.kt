@@ -1,87 +1,110 @@
-package com.example.misteryshopper.activity.fragments;
+package com.example.misteryshopper.activity.fragments
 
-import android.os.Bundle;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.fragment.app.Fragment
+import com.example.misteryshopper.R
+import com.example.misteryshopper.models.ShopperModel
 
-import androidx.fragment.app.Fragment;
+class ShopperProfileFragment : Fragment() {
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+    private var shopperModel: ShopperModel? = null
 
-import com.example.misteryshopper.R;
-import com.example.misteryshopper.models.HiringModel;
-import com.example.misteryshopper.models.ShopperModel;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ShopperProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ShopperProfileFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private ShopperModel mParam1;
-    private TextView name;
-    private TextView surname;
-    private TextView city;
-    private TextView address;
-    private TextView cf;
-    private TextView email;
-
-
-
-    public ShopperProfileFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ShopperProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ShopperProfileFragment newInstance(ShopperModel model) {
-        ShopperProfileFragment fragment = new ShopperProfileFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, model);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = (ShopperModel) getArguments().getSerializable(ARG_PARAM1);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            shopperModel = it.getSerializable(ARG_PARAM1) as? ShopperModel
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_shopper_profile, container, false);
-        name = view.findViewById(R.id.profile_name_fragment);
-        surname = view.findViewById(R.id.profile_surname_fragment);
-        city = view.findViewById(R.id.profile_city_fragment);
-        address = view.findViewById(R.id.profile_address_fragment);
-        cf = view.findViewById(R.id.profile_cf_fragment);
-        email = view.findViewById(R.id.profile_email_fragment);
-        if(mParam1 != null){
-            name.setText(mParam1.getName());
-            surname.setText(mParam1.getSurname());
-            city.setText(mParam1.getCity());
-            address.setText(mParam1.getAddress());
-            cf.setText(mParam1.getCf());
-            email.setText(mParam1.getEmail());
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                shopperModel?.let {
+                    ShopperProfileScreen(it)
+                }
+            }
         }
-        return view;
     }
+
+    companion object {
+        private const val ARG_PARAM1 = "param1"
+        @JvmStatic
+        fun newInstance(model: ShopperModel) =
+            ShopperProfileFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(ARG_PARAM1, model)
+                }
+            }
+    }
+}
+
+@Composable
+fun ShopperProfileScreen(shopper: ShopperModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 10.dp, vertical = 15.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        ProfileLabel(stringResource(id = R.string.complete_name))
+        Row {
+            ProfileInfo(shopper.name ?: "")
+            Spacer(modifier = Modifier.width(5.dp))
+            ProfileInfo(shopper.surname ?: "")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        ProfileLabel(stringResource(id = R.string.complete_address))
+        Row {
+            ProfileInfo(shopper.address ?: "")
+            ProfileInfo(", ")
+            ProfileInfo(shopper.city ?: "")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Row {
+            Column(modifier = Modifier.weight(1f)) {
+                ProfileLabel(stringResource(id = R.string.prompt_email))
+                ProfileInfo(shopper.email ?: "")
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                ProfileLabel(stringResource(id = R.string.cf))
+                ProfileInfo(shopper.cf ?: "")
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileLabel(text: String) {
+    Text(
+        text = text,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        color = MaterialTheme.colors.onSurface
+    )
+}
+
+@Composable
+fun ProfileInfo(text: String) {
+    Text(
+        text = text,
+        color = MaterialTheme.colors.onSurface
+    )
 }
