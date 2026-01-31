@@ -1,6 +1,7 @@
 package com.example.misteryshopper.activity
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.misteryshopper.R
 import com.example.misteryshopper.models.ShopperModel
+import com.example.misteryshopper.models.StoreModel
+import com.example.misteryshopper.utils.ConfigurableList
 import com.example.misteryshopper.viewmodels.ShopperListUiState
 import com.example.misteryshopper.viewmodels.ShopperListViewModel
 import com.example.misteryshopper.viewmodels.ShopperListViewModelFactory
@@ -30,14 +34,24 @@ import com.example.misteryshopper.viewmodels.ShopperListViewModelFactory
 class ShopperListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val store = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getSerializableExtra("store", StoreModel::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getSerializableExtra("store") as? StoreModel
+        }
+
         setContent {
-            ShopperListScreen()
+            ShopperListScreen(storeForHiring = store)
         }
     }
 }
 
 @Composable
-fun ShopperListScreen(viewModel: ShopperListViewModel = viewModel(factory = ShopperListViewModelFactory())) {
+fun ShopperListScreen(
+    storeForHiring: StoreModel?,
+    viewModel: ShopperListViewModel = viewModel(factory = ShopperListViewModelFactory())
+) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
@@ -47,11 +61,9 @@ fun ShopperListScreen(viewModel: ShopperListViewModel = viewModel(factory = Shop
                 title = { Text("Shoppers") },
                 navigationIcon = {
                     IconButton(onClick = {
-                        val backIntent = Intent(context, StoreListActivity::class.java)
-                        backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        context.startActivity(backIntent)
+                        context.startActivity(Intent(context, StoreListActivity::class.java))
                     }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -59,13 +71,18 @@ fun ShopperListScreen(viewModel: ShopperListViewModel = viewModel(factory = Shop
     ) { paddingValues ->
         ShopperListContent(
             modifier = Modifier.padding(paddingValues),
-            uiState = uiState
+            uiState = uiState,
+            storeForHiring = storeForHiring
         )
     }
 }
 
 @Composable
-fun ShopperListContent(modifier: Modifier = Modifier, uiState: ShopperListUiState) {
+fun ShopperListContent(
+    modifier: Modifier = Modifier,
+    uiState: ShopperListUiState,
+    storeForHiring: StoreModel?
+) {
     val context = LocalContext.current
     Box(modifier = modifier.fillMaxSize()) {
         when (uiState) {
@@ -85,59 +102,33 @@ fun ShopperListContent(modifier: Modifier = Modifier, uiState: ShopperListUiStat
                         Text(stringResource(id = R.string.no_item_to_show), style = MaterialTheme.typography.h6)
                     }
                 } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(uiState.shoppers) { shopper ->
-                            ShopperItem(shopper = shopper) {
+                    ConfigurableList(
+                        items = uiState.shoppers,
+                        storeForHiring = storeForHiring,
+                        onItemClick = { item ->
+                            if (item is ShopperModel) {
                                 val go = Intent(context, ShopperProfileActivity::class.java)
-                                go.putExtra("email", shopper.email)
+                                go.putExtra("email", item.email)
                                 context.startActivity(go)
                             }
                         }
-                    }
+                    )
                 }
             }
         }
     }
 }
 
-
-@Composable
-fun ShopperItem(shopper: ShopperModel, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        elevation = 4.dp
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Qui potresti aggiungere un'immagine del profilo se disponibile
-            // AsyncImage(model = shopper.imageUri, contentDescription = "Shopper image", modifier = Modifier.size(50.dp))
-            // Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(text = "${shopper.name} ${shopper.surname}", style = MaterialTheme.typography.h6)
-                Text(text = shopper.email ?: "", style = MaterialTheme.typography.body2)
-            }
-        }
-    }
-}
-
-
+// Previews
 @Preview(showBackground = true, name = "Shopper List With Data")
 @Composable
 fun ShopperListPreview() {
     val shoppers = listOf(
-        ShopperModel(name = "John", surname = "Doe", email = "john.d@example.com"),
-        ShopperModel(name = "Jane", surname = "Smith", email = "jane.s@example.com")
+        ShopperModel(name = "John", surname = "Doe").apply { email = "john.d@example.com" },
+        ShopperModel(name = "Jane", surname = "Smith").apply { email = "jane.s@example.com" }
     )
     MaterialTheme {
-        ShopperListContent(uiState = ShopperListUiState.Success(shoppers))
+        ShopperListContent(uiState = ShopperListUiState.Success(shoppers), storeForHiring = null)
     }
 }
 
@@ -145,7 +136,7 @@ fun ShopperListPreview() {
 @Composable
 fun ShopperListEmptyPreview() {
     MaterialTheme {
-        ShopperListContent(uiState = ShopperListUiState.Success(emptyList()))
+        ShopperListContent(uiState = ShopperListUiState.Success(emptyList()), storeForHiring = null)
     }
 }
 
@@ -153,6 +144,6 @@ fun ShopperListEmptyPreview() {
 @Composable
 fun ShopperListErrorPreview() {
     MaterialTheme {
-        ShopperListContent(uiState = ShopperListUiState.Error("Failed to load shoppers"))
+        ShopperListContent(uiState = ShopperListUiState.Error("Failed to load shoppers"), storeForHiring = null)
     }
 }

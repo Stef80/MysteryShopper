@@ -2,19 +2,41 @@ package com.example.misteryshopper
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,20 +48,56 @@ import com.example.misteryshopper.models.EmployerModel
 import com.example.misteryshopper.viewmodels.AuthState
 import com.example.misteryshopper.viewmodels.MainViewModel
 import com.example.misteryshopper.viewmodels.MainViewModelFactory
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+
+private const val TAG = "MainActivity"
+private const val ERROR_DIALOG_REQUEST = 9001
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen()
+            MainScreen(
+                onCheckServices = {
+                    isServicesOk()
+                }
+            )
         }
+    }
+
+    private fun isServicesOk(): Boolean {
+        Log.d(TAG, "isServicesOk: checking google services version")
+        val available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+        when {
+            available == ConnectionResult.SUCCESS -> {
+                Log.d(TAG, "isServicesOk: Google Play Services is working")
+                return true
+            }
+            GoogleApiAvailability.getInstance().isUserResolvableError(available) -> {
+                Log.d(TAG, "isServicesOk: an error occurred but we can fix it")
+                val dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, available, ERROR_DIALOG_REQUEST)
+                dialog?.show()
+            }
+            else -> {
+                Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return false
     }
 }
 
 @Composable
-fun MainScreen(viewModel: MainViewModel = viewModel(factory = MainViewModelFactory())) {
+fun MainScreen(
+    viewModel: MainViewModel = viewModel(factory = MainViewModelFactory()),
+    onCheckServices: () -> Unit
+) {
     val authState by viewModel.authState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        onCheckServices()
+    }
 
     LaunchedEffect(authState) {
         if (authState is AuthState.Authenticated) {
@@ -71,7 +129,6 @@ fun MainScreen(viewModel: MainViewModel = viewModel(factory = MainViewModelFacto
                 )
             }
             is AuthState.Authenticated -> {
-                // Handled by LaunchedEffect, shows a loading indicator while navigating
                 Box(contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
@@ -175,4 +232,12 @@ fun RegistrationChoiceDialog(
             }
         }
     )
+}
+
+@Preview(showBackground = true, name = "Login Screen Preview")
+@Composable
+fun LoginScreenPreview() {
+    MaterialTheme {
+        LoginScreen(error = null, onLoginClick = { _, _ -> })
+    }
 }

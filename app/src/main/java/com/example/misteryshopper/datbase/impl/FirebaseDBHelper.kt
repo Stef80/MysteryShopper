@@ -10,7 +10,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -38,7 +40,7 @@ class FirebaseDBHelper private constructor() : DBHelper {
                 is EmployerModel -> model.role = EMPLOYER
                 is ShopperModel -> model.role = SHOPPER
             }
-            updateUsers(model, uId, context)
+            updateUsers(model, uId)
         }
         return uId
     }
@@ -60,17 +62,17 @@ class FirebaseDBHelper private constructor() : DBHelper {
 
     override suspend fun getShopperByMail(mail: String): ShopperModel? {
         val query = mDatabase.getReference(USER).orderByChild("email").equalTo(mail)
-        return doQuery<ShopperModel>(query, ShopperModel::class.java).firstOrNull()
+        return doQuery(query, ShopperModel::class.java).firstOrNull()
     }
 
     override suspend fun getEmployerByMail(mail: String): EmployerModel? {
         val query = mDatabase.getReference(USER).orderByChild("email").equalTo(mail)
-        return doQuery<EmployerModel>(query, EmployerModel::class.java).firstOrNull()
+        return doQuery(query, EmployerModel::class.java).firstOrNull()
     }
 
     override suspend fun getUserById(uId: String): User? {
         val query = mDatabase.getReference(USER).orderByChild("id").equalTo(uId)
-        return doQuery<User>(query, User::class.java).firstOrNull()
+        return doQuery(query, User::class.java).firstOrNull()
     }
 
     override suspend fun getRole(uId: String): String? {
@@ -108,13 +110,13 @@ class FirebaseDBHelper private constructor() : DBHelper {
 
     override suspend fun getTokenByMail(mail: String): String? {
          val query = mDatabase.getReference(USER).orderByChild("email").equalTo(mail)
-        val user = doQuery<User>(query, User::class.java).firstOrNull()
+        val user = doQuery(query, User::class.java).firstOrNull()
         return user?.token
     }
 
     override suspend fun getTokenById(id: String): String? {
         val query = mDatabase.getReference(USER).orderByChild("id").equalTo(id)
-        val user = doQuery<User>(query, User::class.java).firstOrNull()
+        val user = doQuery(query, User::class.java).firstOrNull()
         return user?.token
     }
 
@@ -161,7 +163,7 @@ class FirebaseDBHelper private constructor() : DBHelper {
     override val idCurrentUser: String?
         get() = mAuth.currentUser?.uid
 
-    suspend fun updateUsers(model: User?, uId: String, context: Context?) {
+    override suspend fun updateUsers(model: User?, uId: String) {
         mDatabase.getReference(USER).child(uId).setValue(model).await()
     }
 

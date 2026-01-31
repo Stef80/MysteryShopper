@@ -28,6 +28,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
 @Composable
 fun ListHiringScreen(
     viewModel: HiringListViewModel = viewModel(factory = HiringListViewModelFactory()),
@@ -84,7 +86,8 @@ fun ListHiringScreen(
 
 @Composable
 fun HiringItem(hiring: HiringModel, viewModel: HiringListViewModel, onClick: () -> Unit) {
-    val isActionable = hiring.accepted.isNullOrEmpty() && !isDatePast(hiring.date)
+    val isPast = isDatePast(hiring.date)
+    val isActionable = hiring.accepted.isNullOrEmpty() && !isPast
 
     Card(
         modifier = Modifier
@@ -104,7 +107,7 @@ fun HiringItem(hiring: HiringModel, viewModel: HiringListViewModel, onClick: () 
             val statusText: String
             val statusColor: Color
             when {
-                isDatePast(hiring.date) -> {
+                isPast -> {
                     statusText = "Done"
                     statusColor = Color.Gray
                 }
@@ -149,8 +152,7 @@ fun HiringItem(hiring: HiringModel, viewModel: HiringListViewModel, onClick: () 
 private fun isDatePast(dateStr: String?): Boolean {
     if (dateStr == null) return false
     return try {
-        val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val hireDate = format.parse(dateStr)
+        val hireDate = dateFormat.parse(dateStr)
         val now = Date()
         hireDate?.before(now) ?: false
     } catch (e: Exception) {

@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.misteryshopper">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Permission for notifications on Android 13+ -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+  <!--  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -25,9 +28,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
+<!--        <activity
             android:name=".activity.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"></activity>-->
         <activity
             android:name=".activity.StoreListActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
@@ -38,14 +41,15 @@
             android:name=".activity.RegisterEmployerActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
         <activity
-            android:name=".activity.ShopperListActivity"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
-        <activity
             android:name=".activity.RegisterShopperActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
-        <activity android:name=".activity.DialogActivity" />
+        <activity
+            android:name=".activity.ShopperListActivity"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
+
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,13 +68,13 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
-        <service android:name=".utils.notification.MyNotificationService">
+        <service android:name=".utils.notification.MyNotificationService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".utils.notification.NotificationReciver" />
         <receiver android:name=".utils.notification.NotificationActionReceiver"
             android:enabled="true"
             android:exported="false"/>

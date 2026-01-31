@@ -78,7 +78,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.item_back:
@@ -87,6 +87,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
 }

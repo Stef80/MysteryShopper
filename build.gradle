@@ -1,24 +1,9 @@
-buildscript {
-    ext {
-        compose_version = '1.6.8'
-    }
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        // Update to a recent stable version
-        classpath 'com.android.tools.build:gradle:8.2.2'
-        // Use the Kotlin version compatible with your new AGP
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
-        classpath 'com.google.gms:google-services:4.4.2' // Also update google-services
-    }
-}
 
 plugins {
-    id 'com.android.application' version '7.4.2' apply false
-    id 'com.android.library' version '7.4.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
+    // Note: It is recommended to move these to settings.gradle in the future
+    id 'com.android.application' version '8.2.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
+    id 'com.google.gms.google-services' version '4.4.2' apply false
 }
 
 task clean(type: Delete) {

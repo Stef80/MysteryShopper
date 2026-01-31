@@ -1,11 +1,11 @@
 package com.example.misteryshopper.activity
 
-import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -18,77 +18,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.misteryshopper.MainActivity
 import com.example.misteryshopper.R
-import com.example.misteryshopper.datbase.DBHelper
-import com.example.misteryshopper.datbase.DBHelper.DataStatus
-import com.example.misteryshopper.datbase.impl.FirebaseDBHelper
 import com.example.misteryshopper.models.ShopperModel
-import com.example.misteryshopper.utils.camera.PictureHandler
+import com.example.misteryshopper.viewmodels.RegisterShopperViewModel
+import com.example.misteryshopper.viewmodels.RegisterShopperViewModelFactory
+import com.example.misteryshopper.viewmodels.RegistrationState
+import java.io.File
 
 class RegisterShopperActivity : ComponentActivity() {
-    private val mDbHelper: DBHelper = FirebaseDBHelper.instance
-    private var userId: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            RegisterShopperScreen(
-                onRegisterClick = { shopper, email, pass ->
-                    registerShopper(shopper, email, pass)
-                }
-            )
+            RegisterShopperScreen()
         }
-    }
-
-    private fun registerShopper(shopper: ShopperModel, mail: String, pas: String) {
-        var error = false
-        if (TextUtils.isEmpty(mail)) {
-            Toast.makeText(this, R.string.email_not_inserted, Toast.LENGTH_SHORT).show()
-            error = true
-        }
-        if (TextUtils.isEmpty(pas)) {
-            Toast.makeText(this, R.string.invalid_password, Toast.LENGTH_SHORT).show()
-            error = true
-        }
-        if (pas.length <= 5) {
-            Toast.makeText(this, R.string.invalid_password_lenght, Toast.LENGTH_SHORT).show()
-            error = true
-        }
-        if (error) return
-
-        mDbHelper.register(
-            shopper,
-            mail,
-            pas,
-            applicationContext,
-            object : DataStatus {
-                override fun dataIsLoaded(
-                    obj: MutableList<*>?,
-                    keys: MutableList<String?>?
-                ) {
-                    userId = mDbHelper.idCurrentUser
-                    PictureHandler.uploaImageWithoutShow(
-                        userId,
-                        "Shopper",
-                        applicationContext
-                    )
-                    startActivity(
-                        Intent(
-                            this@RegisterShopperActivity,
-                            MainActivity::class.java
-                        )
-                    )
-                    finish()
-                }
-            })
     }
 }
 
-
 @Composable
-fun RegisterShopperScreen(onRegisterClick: (ShopperModel, String, String) -> Unit) {
-
+fun RegisterShopperScreen(viewModel: RegisterShopperViewModel = viewModel(factory = RegisterShopperViewModelFactory())) {
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
@@ -96,13 +46,30 @@ fun RegisterShopperScreen(onRegisterClick: (ShopperModel, String, String) -> Uni
     var cf by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
     val context = LocalContext.current
+    val registrationState by viewModel.registrationState.collectAsState()
 
     val takePictureLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            // Picture was taken successfully
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            // imageUri is already updated
+        }
+    }
+
+    LaunchedEffect(registrationState) {
+        when (val state = registrationState) {
+            is RegistrationState.Success -> {
+                Toast.makeText(context, "Registration successful!", Toast.LENGTH_LONG).show()
+                context.startActivity(Intent(context, MainActivity::class.java))
+            }
+            is RegistrationState.Error -> {
+                Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
+                viewModel.resetState()
+            }
+            else -> Unit
         }
     }
 
@@ -130,29 +97,35 @@ fun RegisterShopperScreen(onRegisterClick: (ShopperModel, String, String) -> Uni
         Spacer(modifier = Modifier.height(10.dp))
 
         Button(onClick = {
-            val intent = PictureHandler.getIntentForPicture(context)
-            takePictureLauncher.launch(intent)
+            val file = File(context.cacheDir, "temp_shopper_image.jpg")
+            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+            imageUri = uri
+            takePictureLauncher.launch(uri)
         }) {
-            Text(text = stringResource(id = R.string.add_image))
+            Text(text = if (imageUri == null) stringResource(id = R.string.add_image) else "Retake Image")
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
         Button(
             onClick = {
-                val shopper = ShopperModel().apply {
-                    this.name = name
-                    this.surname = surname
-                    this.address = address
-                    this.city = city
-                    this.cf = cf
-                    this.email = email
-                }
-                onRegisterClick(shopper, email, password)
+                val shopper = ShopperModel(
+                    name = name,
+                    surname = surname,
+                    address = address,
+                    city = city,
+                    cf = cf
+                ).apply { this.email = email }
+                viewModel.registerShopper(shopper, email, password, imageUri, context)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = registrationState !is RegistrationState.Loading
         ) {
-            Text(text = stringResource(id = R.string.action_sign_in_short))
+            if (registrationState is RegistrationState.Loading) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp))
+            } else {
+                Text(text = stringResource(id = R.string.action_sign_in_short))
+            }
         }
     }
 }
@@ -160,5 +133,5 @@ fun RegisterShopperScreen(onRegisterClick: (ShopperModel, String, String) -> Uni
 @Preview(showBackground = true)
 @Composable
 fun DefaultRegisterShopperPreview() {
-    RegisterShopperScreen { _, _, _ -> }
+    RegisterShopperScreen()
 }

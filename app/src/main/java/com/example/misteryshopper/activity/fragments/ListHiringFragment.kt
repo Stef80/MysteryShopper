@@ -23,7 +23,7 @@ class ListHiringFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                val userEmail = prefConfig.readLoggedUser().email
+                val userEmail = prefConfig.readLoggedUser()?.email
                 if (userEmail != null) {
                     ListHiringScreen(userEmail = userEmail)
                 }

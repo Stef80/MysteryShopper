@@ -44,7 +44,7 @@ class ShopperProfileActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val config = SharedPrefConfig(applicationContext)
-        val loggedUserEmail = config.readLoggedUser().email
+        val loggedUserEmail = config.readLoggedUser()?.email
         val profileEmail = intent.getStringExtra(EMAIL)
 
         setContent {

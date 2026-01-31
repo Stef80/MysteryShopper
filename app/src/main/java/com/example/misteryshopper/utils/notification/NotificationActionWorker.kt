@@ -24,6 +24,7 @@ class NotificationActionWorker(
         val hId = inputData.getString(KEY_HIRING_ID)
         val employerId = inputData.getString(KEY_EMPLOYER_ID)
         val address = inputData.getString(KEY_ADDRESS)
+        val notificationHandler = NotificationHandler(context)
 
         val config = SharedPrefConfig(context)
         val shopperModel = config.readLoggedUser() as? ShopperModel
@@ -43,7 +44,7 @@ class NotificationActionWorker(
                             "$name $surname",
                             "accepted"
                         )
-                        NotificationHandler.cancelNotification()
+                        notificationHandler.cancelNotification()
                     }
                     "decline" -> {
                         dbHelper.setOutcome(hId!!, "declined")
@@ -55,7 +56,7 @@ class NotificationActionWorker(
                             "$name $surname",
                             "declined"
                         )
-                        NotificationHandler.cancelNotification()
+                        notificationHandler.cancelNotification()
                     }
                     "show" -> {
                         val go = Intent(context, MapsActivity::class.java).apply {
@@ -63,7 +64,7 @@ class NotificationActionWorker(
                             putExtra("address", address)
                         }
                         context.startActivity(go)
-                        NotificationHandler.cancelNotification()
+                        notificationHandler.cancelNotification()
                     }
                 }
                 Result.success()

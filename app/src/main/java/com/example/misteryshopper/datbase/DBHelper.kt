@@ -26,6 +26,7 @@ interface DBHelper {
     suspend fun addImageToUserById(id: String, imageUri: Uri, context: Context)
     suspend fun addImageToStoreById(id: String, imageUri: Uri, context: Context)
     suspend fun setTotalForUserId(id: String, totalAmount: Double)
+    suspend fun updateUsers(model: User?, uId: String)
     val idCurrentUser: String?
 
     // The DataStatus interface is no longer needed with coroutines
