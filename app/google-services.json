@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "155122074315",
+    "firebase_url": "https://mystery-shopper-13ddf.firebaseio.com",
+    "project_id": "mystery-shopper-13ddf",
+    "storage_bucket": "mystery-shopper-13ddf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155122074315:android:0f9db6a520f0598ecf114e",
+        "android_client_info": {
+          "package_name": "com.example.misteryshopper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "155122074315-0a3sglcoosop6g2rra9t7ks0bshse56d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.misteryshopper",
+            "certificate_hash": "96b580ee62fcaaf6e5bf52c974a514934891e5cf"
+          }
+        },
+        {
+          "client_id": "155122074315-6gob2bl9eu5f68dbfq10knv9onaefjdm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCup5XtMLLza4jxp2kaKnUc5iOOLmaYtvg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "155122074315-6gob2bl9eu5f68dbfq10knv9onaefjdm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
